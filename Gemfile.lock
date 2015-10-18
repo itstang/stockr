@@ -139,10 +139,17 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  actionpack
   byebug
   coffee-rails (~> 4.1.0)
+  globalid
+  i18n
   jbuilder (~> 2.0)
   jquery-rails
+  json
+  minitest
+  rack
+  rack-test
   rails (= 4.2.4)
   sass-rails (~> 5.0)
   sdoc (~> 0.4.0)
