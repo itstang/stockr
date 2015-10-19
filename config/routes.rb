@@ -9,6 +9,7 @@ Rails.application.routes.draw do
   get    'rankings' => 'static_pages#rankings'
   get    'history' => 'static_pages#history'
   get    'contact' => 'static_pages#contact'
+  get    'search'  => 'static_pages#search'
   get    'signup'  => 'users#new'
   get    'login'   => 'sessions#new'
   post   'login'   => 'sessions#create'

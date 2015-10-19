@@ -24,9 +24,11 @@ class StaticPagesController < ApplicationController
   end
 
   def history
-    @user ||= User.find(session[:email]) if session[:email]
+
   end
 
   def contact
+
   end
+
 end
