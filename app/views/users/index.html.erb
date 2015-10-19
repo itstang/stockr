@@ -21,6 +21,7 @@
             <% end %>
           </li>
       <% end %>
+      <%= will_paginate %>
   <% else%>
       <% @users.where(name: params[:search]).each do |user| %>
           <li>
@@ -34,4 +35,4 @@
   <% end %>
 </ul>
 
-<%= will_paginate %>
+
