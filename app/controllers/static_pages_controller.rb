@@ -1,5 +1,5 @@
 class StaticPagesController < ApplicationController
-  
+
   def home
   end
 
@@ -14,7 +14,9 @@ class StaticPagesController < ApplicationController
   end
 
   def stocks
-
+    y_client = YahooFinance::Client.new
+    @stocks = Stock.all
+    @data = y_client.quotes(@stocks.pluck(:symbol), [:day_value_change, :bid])
   end
 
   def rankings
