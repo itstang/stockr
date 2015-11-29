@@ -1,5 +1,24 @@
 <% provide(:title, "Stocks") %>
 <h1>Stocks</h1>
-<p>
-  stocks goes here
-</p>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>Symbol</th>
+      <th>Company Name</th>
+      <th>Asking Price</th>
+      <th>Bidding Price</th>
+      <th>Sentiment</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @stocks.each_with_index do |stock, index| %>
+      <tr>
+        <td><%= stock.symbol %></td>
+        <td><%= stock.company %></td>
+        <td>$<%= @data[index].day_value_change %></td>
+        <td>$<%= @data[index].bid %></td>
+        <td><%= @data[index].sentiment %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

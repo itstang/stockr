@@ -7,10 +7,10 @@ total_score=0
 avg_sentiment= 0
 new_tweets_arr = Array.new
 
-# due to alchemy api limitations, we are only using four tweets for now
-tweets = $twitter.search('$' + 'ACOR' + ' -rt',
+# due to alchemy api limitations (1000 requests), we are only using four tweets for now
+tweets = $twitter.search('$' + 'AAPL' + ' -rt',
                                result_type: 'mixed',
-                               count: 20).take(4)
+                               count: 20).take(5)
 
 # remove url from tweets
 tweets.each do |tweet|	
@@ -31,5 +31,10 @@ end
 
 avg_sentiment = total_score/num_tweets
 # For testing purposes
-# puts avg_sentiment
+puts avg_sentiment
 # puts num_tweets
+# 
+# if negative sentiment + high stock = sell
+# negative + low= don't buy, sell
+# positive sentiment + low stock price= buy
+# 

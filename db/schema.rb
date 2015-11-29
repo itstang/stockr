@@ -37,6 +37,13 @@ ActiveRecord::Schema.define(version: 20151128210727) do
 
   add_index "rankings", ["rank"], name: "index_rankings_on_rank", unique: true
 
+  create_table "stocks", force: :cascade do |t|
+    t.string   "symbol"
+    t.string   "company"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "transactions", force: :cascade do |t|
     t.integer "transaction_id"
     t.string  "type"

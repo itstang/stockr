@@ -6,6 +6,14 @@
 #   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
 #   Mayor.create(name: 'Emanuel', city: cities.first)
 
+Stock.create!([
+  {id: 1, symbol: "AAPL", company: "Apple Inc."},
+  {id: 2, symbol: "FB", company: "Facebook, Inc."},
+  {id: 3, symbol: "TWTR", company: "Twitter, Inc."},
+  {id: 4, symbol: "GOOG", company: "Alphabet Inc."},
+  {id: 5, symbol: "NFLX", company: "Netflix, Inc."},
+])
+
 User.create!(name:  "Admin User",
              email: "admin@stockr.com",
              password:              "foobar",
