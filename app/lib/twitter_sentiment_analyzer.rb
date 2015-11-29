@@ -3,16 +3,22 @@ require '../../config/initializers/alchemyapi'
 
 alchemyapi = AlchemyAPI.new()
 
-# myText = "I can't wait to integrate AlchemyAPI's awesome Ruby SDK into my app!"
-# response = alchemyapi.sentiment("text", myText)
-# puts "Sentiment Score: " + response["docSentiment"]["score"] + " Sentiment type: " + response["docSentiment"]["type"]
+myText = "I'm excited to get started with AlchemyAPI!"
+response = alchemyapi.sentiment("text", myText)
+print "Sentiment: ", response["docSentiment"]["type"]
 
-tweets = $twitter.search('$' + 'AAPL' + ' -rt',
+
+# due to alchemy api limitations, we are only using four tweets for now
+tweets = $twitter.search('$' + 'ACOR' + ' -rt',
                                result_type: 'mixed',
-                               count: 20).take(100)
+                               count: 20).take(4)
 
-tweets.uniq
+num_tweets=0
+total_score=0
+avg_sentiment= 0
 new_tweets_arr = Array.new
+
+# remove url from tweets
 tweets.each do |tweet|	
 	tweet_no_url= tweet.text.dup
 	tweet_no_url.gsub!(/(?:f|ht)tps?:\/[^\s]+/, '')
@@ -23,8 +29,13 @@ end
 new_tweets_arr.uniq!
 new_tweets_arr.each do |tweet|	
 	tweet_sentiment= alchemyapi.sentiment("text", tweet)
-	puts tweet
-	if tweet_sentiment["status"] == 'OK'
-		puts "Sentiment Score: " + tweet_sentiment["docSentiment"]["score"] + " Sentiment type: " + tweet_sentiment["docSentiment"]["type"]
+	if tweet_sentiment["status"] == 'OK' && tweet_sentiment["docSentiment"]["score"] != nil
+		puts tweet_sentiment["docSentiment"]["score"].to_f
+		total_score += tweet_sentiment["docSentiment"]["score"].to_f
+		num_tweets= num_tweets + 1
 	end
 end
+
+avg_sentiment = total_score/num_tweets
+puts avg_sentiment
+puts num_tweets
