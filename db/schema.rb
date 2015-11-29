@@ -28,6 +28,8 @@ ActiveRecord::Schema.define(version: 20151128210727) do
     t.string  "name"
   end
 
+  add_index "processes", ["symbol"], name: "index_processes_on_symbol", unique: true
+
   create_table "rankings", force: :cascade do |t|
     t.integer "rank"
     t.integer "interval"
@@ -48,6 +50,9 @@ ActiveRecord::Schema.define(version: 20151128210727) do
     t.integer "transaction_id"
   end
 
+  add_index "user_makes", ["email"], name: "index_user_makes_on_email", unique: true
+  add_index "user_makes", ["transaction_id"], name: "index_user_makes_on_transaction_id", unique: true
+
   create_table "user_owns", force: :cascade do |t|
     t.string  "email"
     t.string  "symbol"
@@ -55,11 +60,15 @@ ActiveRecord::Schema.define(version: 20151128210727) do
   end
 
   add_index "user_owns", ["email"], name: "index_user_owns_on_email", unique: true
+  add_index "user_owns", ["symbol"], name: "index_user_owns_on_symbol", unique: true
 
   create_table "user_watches", force: :cascade do |t|
     t.string "email"
     t.string "symbol"
   end
+
+  add_index "user_watches", ["email"], name: "index_user_watches_on_email", unique: true
+  add_index "user_watches", ["symbol"], name: "index_user_watches_on_symbol", unique: true
 
   create_table "users", force: :cascade do |t|
     t.string   "name"

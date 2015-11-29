@@ -7,11 +7,6 @@ total_score=0
 avg_sentiment= 0
 new_tweets_arr = Array.new
 
-myText = "I'm excited to get started with AlchemyAPI!"
-response = alchemyapi.sentiment("text", myText)
-print "Sentiment: ", response["docSentiment"]["type"]
-
-
 # due to alchemy api limitations, we are only using four tweets for now
 tweets = $twitter.search('$' + 'ACOR' + ' -rt',
                                result_type: 'mixed',
@@ -35,5 +30,6 @@ new_tweets_arr.each do |tweet|
 end
 
 avg_sentiment = total_score/num_tweets
-puts avg_sentiment
-puts num_tweets
+# For testing purposes
+# puts avg_sentiment
+# puts num_tweets
