@@ -23,13 +23,18 @@ class StaticPagesController < ApplicationController
 
 
     @stocks.each_with_index do |stock, index|
-        alchemyapi = AlchemyAPI.new()
+        @data[index].sentiment= sentiment(stock.symbol)
+    end
+  end
+
+  def sentiment(stock_symbol)
+    alchemyapi = AlchemyAPI.new()
         num_tweets=0
         total_score=0
-        @avg_sentiment= 0
+        avg_sentiment= 0
         new_tweets_arr = Array.new
 
-        tweets = $twitter.search('$' + stock.symbol + ' -rt',
+        tweets = $twitter.search('$' + stock_symbol + ' -rt',
                                    result_type: 'mixed',
                                    count: 20).take(5)
 
@@ -50,10 +55,8 @@ class StaticPagesController < ApplicationController
           end
         end
 
-        @avg_sentiment = total_score/num_tweets
-        @data[index].sentiment= @avg_sentiment
-
-    end
+        avg_sentiment = total_score/num_tweets
+        return avg_sentiment
   end
 
   def rankings
