@@ -64,10 +64,6 @@ class StaticPagesController < ApplicationController
         return avg_sentiment
   end
 
-  def rankings
-
-  end
-
   def history
     @user ||= User.find(session[:email]) if session[:email]
   end
