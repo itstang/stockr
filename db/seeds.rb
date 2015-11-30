@@ -7,13 +7,14 @@
 #   Mayor.create(name: 'Emanuel', city: cities.first)
 
 
-Stock.create!([
-  {id: 1, symbol: "AAPL", company: "Apple Inc."},
-  {id: 2, symbol: "FB", company: "Facebook, Inc."},
-  {id: 3, symbol: "TWTR", company: "Twitter, Inc."},
-  {id: 4, symbol: "GOOG", company: "Alphabet Inc."},
-  {id: 5, symbol: "NFLX", company: "Netflix, Inc."},
-])
+yahoo_client = YahooFinance::Client.new
+stocks = yahoo_client.symbols_by_market('us', 'nyse')
+
+for stock in stocks
+  data = yahoo_client.quote(stock, [:name])
+  Stock.create!(symbol: stock,
+                company: data.name)
+end
 
 User.create!(name:  "Admin User",
              email: "admin@stockr.com",
