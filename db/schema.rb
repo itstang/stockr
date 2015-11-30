@@ -66,7 +66,6 @@ ActiveRecord::Schema.define(version: 20151128214509) do
     t.integer "shares"
   end
 
-  add_index "user_owns", ["email"], name: "index_user_owns_on_email", unique: true
   add_index "user_owns", ["symbol"], name: "index_user_owns_on_symbol", unique: true
 
   create_table "user_watches", force: :cascade do |t|

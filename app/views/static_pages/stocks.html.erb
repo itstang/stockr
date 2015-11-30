@@ -20,7 +20,7 @@
     </tr>
   </thead>
   <tbody>
-    <% @stocks.each_with_index do |stock, index| %>
+    <% @user_owns.each_with_index do |stock, index| %>
       <tr>
         <td><%= stock.symbol %></td>
         <td><%= @data[index].name %></td>
