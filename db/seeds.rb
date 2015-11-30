@@ -18,7 +18,8 @@ User.create!(name:  "Admin User",
              email: "admin@stockr.com",
              password:              "foobar",
              password_confirmation: "foobar",
-             admin: true)
+             admin: true,
+             balance: 10000.00)
 
 99.times do |n|
   name  = Faker::Name.name
@@ -27,5 +28,6 @@ User.create!(name:  "Admin User",
   User.create!(name:  name,
                email: email,
                password:              password,
-               password_confirmation: password)
+               password_confirmation: password,
+               balance: 10000.00)
 end

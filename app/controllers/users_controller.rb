@@ -13,7 +13,7 @@ class UsersController < ApplicationController
   end
 
   def create
-    @user = User.new(user_params)
+    @user = User.new(user_params, balance: 10000)
     if @user.save
       log_in @user
       flash[:success] = "Welcome to the Stockr!"
@@ -51,7 +51,7 @@ class UsersController < ApplicationController
 
     def user_params
       params.require(:user).permit(:name, :email, :password,
-                                   :password_confirmation)
+                                   :password_confirmation, :balance)
     end
 
     # Before filters
