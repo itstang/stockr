@@ -6,12 +6,13 @@
 #   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
 #   Mayor.create(name: 'Emanuel', city: cities.first)
 
-User_Owns.create!([
-  {email: 'matthew@email.com', symbol: "AAPL"},
-  {email: 'matthew@email.com', symbol: "FB"},
-  {email: 'matthew@email.com', symbol: "TWTR"},
-  {email: 'matthew@email.com', symbol: "GOOG",},
-  {email: 'matthew@email.com', symbol: "NFLX",},
+
+Stock.create!([
+  {symbol: "AAPL", company: "Apple, Inc."},
+  {symbol: "FB", company: "Facebook, Inc."},
+  {symbol: "TWTR", company: "Twitter, Inc."},
+  {symbol: "GOOG", company: "Google, Inc."},
+  {symbol: "NFLX", company: "Netflix"},
 ])
 
 User.create!(name:  "Admin User",

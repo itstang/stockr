@@ -1,7 +1,36 @@
 <% provide(:title, "Dashboard") %>
 <h1>Dashboard</h1>
-<p>
-  dashboard goes here
-</p>
+
 <p><b>Email:</b> <%= current_user.email %></p>
 <p><b>Balance:</b> <%= current_user.balance %></p>
+
+<!-- Watch list -->
+<h3>Watch list</h3>
+<%= form_tag(stocks_add_path, method: "get") do %>
+  <%= label_tag(:symbol, "Stock Symbol:") %>
+  <%= text_field_tag(:symbol) %>
+  <%= submit_tag("Add to watch list") %>
+<% end %>
+
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>Symbol</th>
+      <th>Company Name</th>
+      <th>Asking Price</th>
+      <th>Bidding Price</th>
+      <th>Sentiment</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @user_owns.each_with_index do |stock, index| %>
+      <tr>
+        <td><%= stock.symbol %></td>
+        <td><%= @data[index].name %></td>
+        <td>$<%= @data[index].day_value_change %></td>
+        <td>$<%= @data[index].bid %></td>
+        <td><%= @data[index].sentiment %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

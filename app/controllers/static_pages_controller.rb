@@ -13,9 +13,6 @@ class StaticPagesController < ApplicationController
   end
 
   def dashboard
-  end
-
-  def stocks
     y_client = YahooFinance::Client.new
     @user_owns = User_Owns.where(email: current_user.email)
     @data = y_client.quotes(@user_owns.pluck(:symbol), [:name, :day_value_change, :bid, :sentiment])
@@ -26,9 +23,13 @@ class StaticPagesController < ApplicationController
     end
   end
 
+  def stocks
+    @stocks = Stock.all
+  end
+
   def stocks_add
     User_Owns.create(email: current_user.email, symbol: params[:symbol])
-    redirect_to stocks_url
+    redirect_to dashboard_url
   end
 
   def sentiment(stock_symbol)

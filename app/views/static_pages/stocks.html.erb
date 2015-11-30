@@ -1,32 +1,16 @@
-<% provide(:title, "Stocks") %>
-<h1>Stocks</h1>
-
-<!-- add stocks -->
-<%= form_tag(stocks_add_path, method: "get") do %>
-  <%= label_tag(:symbol, "Stock Symbol:") %>
-  <%= text_field_tag(:symbol) %>
-  <%= submit_tag("Add") %>
-<% end %>
-
-<!-- stocks table -->
+<h1>Stocks list</h1>
 <table class="table table-striped">
   <thead>
     <tr>
       <th>Symbol</th>
       <th>Company Name</th>
-      <th>Asking Price</th>
-      <th>Bidding Price</th>
-      <th>Sentiment</th>
     </tr>
   </thead>
   <tbody>
-    <% @user_owns.each_with_index do |stock, index| %>
+    <% @stocks.each_with_index do |stock, index| %>
       <tr>
         <td><%= stock.symbol %></td>
-        <td><%= @data[index].name %></td>
-        <td>$<%= @data[index].day_value_change %></td>
-        <td>$<%= @data[index].bid %></td>
-        <td><%= @data[index].sentiment %></td>
+        <td><%= stock.company %></td>
       </tr>
     <% end %>
   </tbody>
