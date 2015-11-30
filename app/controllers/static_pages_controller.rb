@@ -19,7 +19,7 @@ class StaticPagesController < ApplicationController
   def stocks
     y_client = YahooFinance::Client.new
     @stocks = Stock.all
-    @data = y_client.quotes(@stocks.pluck(:symbol), [:day_value_change, :bid, :sentiment])
+    @data = y_client.quotes(@stocks.pluck(:symbol), [:name, :day_value_change, :bid, :sentiment])
 
 
     @stocks.each_with_index do |stock, index|
@@ -27,9 +27,14 @@ class StaticPagesController < ApplicationController
     end
   end
 
+  def stocks_add
+    Stock.create(symbol: params[:symbol])
+    redirect_to stocks_url
+  end
+
   def sentiment(stock_symbol)
     alchemyapi = AlchemyAPI.new()
-        num_tweets=0
+        num_tweets=1
         total_score=0
         avg_sentiment= 0
         new_tweets_arr = Array.new
