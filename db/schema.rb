@@ -11,7 +11,29 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151019004324) do
+ActiveRecord::Schema.define(version: 20151128214509) do
+
+  create_table "dividends", force: :cascade do |t|
+    t.string  "symbol"
+    t.integer "dividend"
+    t.integer "interval"
+  end
+
+  add_index "dividends", ["symbol"], name: "index_dividends_on_symbol", unique: true
+
+  create_table "processes", force: :cascade do |t|
+    t.string  "symbol"
+    t.integer "news_sentiment"
+    t.integer "social_sentiment"
+    t.string  "name"
+  end
+
+  create_table "rankings", force: :cascade do |t|
+    t.integer "rank"
+    t.integer "interval"
+  end
+
+  add_index "rankings", ["rank"], name: "index_rankings_on_rank", unique: true
 
   create_table "stocks", force: :cascade do |t|
     t.string   "symbol"
@@ -20,13 +42,42 @@ ActiveRecord::Schema.define(version: 20151019004324) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "transactions", force: :cascade do |t|
+    t.integer "transaction_id"
+    t.string  "type"
+    t.integer "amount"
+  end
+
+  add_index "transactions", ["transaction_id"], name: "index_transactions_on_transaction_id", unique: true
+
+  create_table "user_makes", force: :cascade do |t|
+    t.string  "email"
+    t.integer "transaction_id"
+  end
+
+  create_table "user_owns", force: :cascade do |t|
+    t.string  "email"
+    t.string  "symbol"
+    t.integer "shares"
+  end
+
+  add_index "user_owns", ["email"], name: "index_user_owns_on_email", unique: true
+
+  create_table "user_watches", force: :cascade do |t|
+    t.string "email"
+    t.string "symbol"
+  end
+
   create_table "users", force: :cascade do |t|
     t.string   "name"
     t.string   "email"
-    t.datetime "created_at",      null: false
-    t.datetime "updated_at",      null: false
+    t.datetime "created_at",                      null: false
+    t.datetime "updated_at",                      null: false
     t.string   "password_digest"
     t.string   "remember_digest"
+    t.boolean  "admin",           default: false
+    t.decimal  "balance"
+    t.integer  "rank"
   end
 
   add_index "users", ["email"], name: "index_users_on_email", unique: true
