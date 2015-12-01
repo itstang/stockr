@@ -14,7 +14,6 @@ x_axis = []
 # end
 
 historical_data.each { |row|  x_axis << row['trade_date'] }
-puts x_axis
 start_date = x_axis.min
 middle_date = x_axis[(x_axis.length ) / 2]
 end_date = x_axis.max
