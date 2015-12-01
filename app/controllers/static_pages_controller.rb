@@ -16,7 +16,13 @@ class StaticPagesController < ApplicationController
   def stocks
     y_client = YahooFinance::Client.new
     @stocks = Stock.all
-    @data = y_client.quotes(@stocks.pluck(:symbol), [:day_value_change, :bid])
+    @data = y_client.quotes(@stocks.pluck(:symbol), [:name, :day_value_change, :bid])
+  end
+
+  def stocks_add
+    Stock.create(symbol: params[:symbol])
+
+    redirect_to stocks_url
   end
 
   def rankings
