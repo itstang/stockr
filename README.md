@@ -2,6 +2,7 @@
 
 - $ cd stockr
 - $ bundle install
+- $ brew install ghostscript
 - $ bundle exec rake db:migrate
 - $ bundle exec rake test
 - $ rake db:seed
