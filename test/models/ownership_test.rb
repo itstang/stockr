@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class StockTest < ActiveSupport::TestCase
+class OwnershipTest < ActiveSupport::TestCase
   # test "the truth" do
   #   assert true
   # end
