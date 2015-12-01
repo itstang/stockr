@@ -6,6 +6,7 @@ Rails.application.routes.draw do
   get    'about'   => 'static_pages#about'
   get    'dashboard' => 'static_pages#dashboard'
   get    'stocks'  => 'static_pages#stocks'
+  get    'stocks/:id' => 'static_pages#stocks_show'
   get    'stocks/add' => 'static_pages#stocks_add'
   get    'rankings' => 'static_pages#rankings'
   get    'history' => 'static_pages#history'
@@ -16,4 +17,5 @@ Rails.application.routes.draw do
   post   'login'   => 'sessions#create'
   delete 'logout'  => 'sessions#destroy'
   resources :users
+  resources :stocks
 end

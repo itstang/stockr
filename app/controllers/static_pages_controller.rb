@@ -27,6 +27,10 @@ class StaticPagesController < ApplicationController
     @stocks = Stock.all
   end
 
+  def stocks_show
+    @stock = Stock.find(params[:id])
+  end
+
   def stocks_add
     User_Owns.create(email: current_user.email, symbol: params[:symbol])
     redirect_to dashboard_url
