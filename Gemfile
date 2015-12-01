@@ -18,6 +18,7 @@ gem 'jbuilder',                '2.2.3'
 gem 'twitter'                
 gem 'sdoc',                    '0.4.0', group: :doc
 gem 'yahoo-finance'
+gem 'gruff'
 
 group :development, :test do
   gem 'sqlite3',     '1.3.9'
