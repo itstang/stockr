@@ -17,12 +17,12 @@ Stock.create!([
 ])
 
 yahoo_client = YahooFinance::Client.new
-stocks = yahoo_client.symbols_by_market('us', 'nyse').each_slice(100).to_a
+symbols = yahoo_client.symbols_by_market('us', 'nyse')
+names = yahoo_client.names_by_market('us', 'nyse')
 
-for stock in stocks[0]
-  data = yahoo_client.quote(stock, [:name])
-  Stock.create!(symbol: stock,
-                company: data.name)
+for stock in 0..symbols.length
+  Stock.create!(symbol: symbols[stock],
+                company: names[stock])
 end
 
 User.create!(name:  "Admin User",

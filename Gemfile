@@ -15,9 +15,9 @@ gem 'coffee-rails',            '4.1.0'
 gem 'jquery-rails',            '4.0.3'
 gem 'turbolinks',              '2.3.0'
 gem 'jbuilder',                '2.2.3'
-gem 'twitter'                
 gem 'sdoc',                    '0.4.0', group: :doc
-gem 'yahoo-finance'
+gem 'yahoo-finance',           :git => 'git://github.com/itstang/yahoo-finance'
+gem 'twitter'
 
 group :development, :test do
   gem 'sqlite3',     '1.3.9'
