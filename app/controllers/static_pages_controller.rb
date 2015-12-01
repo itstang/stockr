@@ -2,7 +2,7 @@ require 'twitter.rb'
 require "#{Rails.root}/config/initializers/alchemyapi.rb"
 
 class StaticPagesController < ApplicationController
-  
+
   def home
   end
 
