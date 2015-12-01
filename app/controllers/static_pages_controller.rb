@@ -34,14 +34,14 @@ class StaticPagesController < ApplicationController
 
   def sentiment(stock_symbol)
     alchemyapi = AlchemyAPI.new()
-        num_tweets=1
+        num_tweets=0
         total_score=0
         avg_sentiment= 0
         new_tweets_arr = Array.new
 
         tweets = $twitter.search('$' + stock_symbol + ' -rt',
                                    result_type: 'mixed',
-                                   count: 20).take(5)
+                                   count: 20).take(3)
 
         # remove url from tweets
         tweets.each do |tweet|  
@@ -59,8 +59,11 @@ class StaticPagesController < ApplicationController
             num_tweets= num_tweets + 1
           end
         end
-
-        avg_sentiment = total_score/num_tweets
+        if(num_tweets == 0)
+          avg_sentiment = 0
+        else
+          avg_sentiment = total_score/num_tweets
+        end
         return avg_sentiment
   end
 
