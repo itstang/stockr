@@ -8,9 +8,9 @@
 
 
 yahoo_client = YahooFinance::Client.new
-stocks = yahoo_client.symbols_by_market('us', 'nyse')
+stocks = yahoo_client.symbols_by_market('us', 'nyse').each_slice(100).to_a
 
-for stock in stocks
+for stock in stocks[0]
   data = yahoo_client.quote(stock, [:name])
   Stock.create!(symbol: stock,
                 company: data.name)
