@@ -1,11 +1,6 @@
 <h1><%= @stock.company %> (<%= @stock.symbol %>)</h1>
 
 <div id="container" style="width:100%; height:400px;"></div>
-
-
-
-
-
 <div class="row stock">
     <div class="container">
         <div class="jumbotron text-center col-md-6">
@@ -15,7 +10,7 @@
         	<div class= "jumbotron-content">
 
         	</div>
-            
+
         </div>
 
         <div class="jumbotron text-center col-md-6">
@@ -26,14 +21,14 @@
         	<div class= "jumbotron-content">
 
         	</div>
-            
+
         </div>
     </div>
 </div>
 
 <div class="row stock">
     <div class="container">
-        <div class="jumbotron text-center col-md-6">    
+        <div class="jumbotron text-center col-md-6">
         <div class= "jumbo-header history">
         	History of Stock
         </div>
@@ -48,7 +43,7 @@
 			        <th>Close</th>
 			      </tr>
 			    </thead>
-			    <tbody>	     
+			    <tbody>
 			      	<% @historical_data[0..4].each do |date_data| %>
 			      		<tr>
 			  			<td><%= date_data['trade_date'] %></td>
@@ -58,7 +53,7 @@
 			  			<td>$<%= date_data['close'] %></td>
 			  			</tr>
 					<% end %>
-			      
+
 			    </tbody>
 			  </table>
 	       </div>
@@ -73,7 +68,7 @@
         	<div class= "jumbotron-content">
 
         	</div>
-            
+
         </div>
     </div>
 </div>
@@ -146,3 +141,4 @@ console.log(<%= @open_history %>);
 });
 <% end %>
 
+<%= link_to 'Scrape', scrape_media(@stock.symbol) %>
