@@ -1,17 +1,30 @@
 <%= javascript_include_tag "//www.google.com/jsapi", "chartkick" %>
 <h1><%= @stock.company %> (<%= @stock.symbol %>)</h1>
  
-<table>
-  <tr>
-    <th>Title</th>
-    <th>Summary</th>
-    <th></th>
-    <th></th>
-    <th></th>
-  </tr>
- 
+<div class="row stock">
+    <div class="container">
+        <div class="jumbotron text-center col-md-6">
+            <h1>Stockr</h1>
+            
+        </div>
 
-  
-</table>
+        <div class="jumbotron text-center col-md-6">
+            <h1>is</h1>
+            
+        </div>
+    </div>
+</div>
 
-<%= pie_chart @h[0].high %>
+<div class="row stock">
+    <div class="container">
+        <div class="jumbotron text-center col-md-6">
+            <h1>Awesome</h1>
+            
+        </div>
+
+        <div class="jumbotron text-center col-md-6">
+            <h1>Test</h1>
+            
+        </div>
+    </div>
+</div>

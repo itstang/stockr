@@ -203,3 +203,11 @@ input {
     border-bottom: 1px solid $gray-lighter;
   }
 }
+
+.stock .container {
+  display: flex;
+}
+
+.stock .jumbotron {
+  margin: 20px;
+}
