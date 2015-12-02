@@ -1,3 +1,4 @@
+<%= javascript_include_tag "//www.google.com/jsapi", "chartkick" %>
 <h1><%= @stock.company %> (<%= @stock.symbol %>)</h1>
  
 <table>
@@ -13,4 +14,4 @@
   
 </table>
 
-<p></p>
+<%= pie_chart @h[0].high %>

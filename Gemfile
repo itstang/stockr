@@ -19,6 +19,8 @@ gem 'sdoc',                    '0.4.0', group: :doc
 gem 'yahoo-finance',           :git => 'git://github.com/itstang/yahoo-finance'
 gem 'twitter'
 gem 'gruff', '~> 0.6.0'
+gem 'rmagick'
+gem 'chartkick'
 
 group :development, :test do
   gem 'sqlite3',     '1.3.9'

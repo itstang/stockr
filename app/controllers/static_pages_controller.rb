@@ -29,12 +29,14 @@ class StaticPagesController < ApplicationController
 
   def stocks_show
     @stock = Stock.find(params[:id])
-    @graph= histogram(@stock.symbol)
+    yahoo_client = YahooFinance::Client.new
+    @h = historical_data = yahoo_client.historical_quotes(@stock.symbol, { start_date: Time::now-(24*60*60*21), end_date: Time::now })
+    #@graph= histogram(@stock.symbol)
   end
 
   def histogram(stock_symbol)
     yahoo_client = YahooFinance::Client.new
-    historical_data = yahoo_client.historical_quotes(stock_symbol, { start_date: Time::now-(24*60*60*21), end_date: Time::now })
+    @h = historical_data = yahoo_client.historical_quotes(stock_symbol, { start_date: Time::now-(24*60*60*21), end_date: Time::now })
 
     graph = Gruff::Line.new(600)
     graph.title = 'Three Week History of ' + stock_symbol

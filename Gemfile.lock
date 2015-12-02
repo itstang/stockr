@@ -66,6 +66,7 @@ GEM
       mime-types (>= 1.16)
     celluloid (0.16.0)
       timers (~> 4.0.0)
+    chartkick (1.4.1)
     coderay (1.1.0)
     coffee-rails (4.1.0)
       coffee-script (>= 2.2.0)
@@ -380,6 +381,7 @@ DEPENDENCIES
   bootstrap-will_paginate (= 0.0.10)
   byebug (= 3.4.0)
   carrierwave (= 0.10.0)
+  chartkick
   coffee-rails (= 4.1.0)
   faker (= 1.4.2)
   fog (= 1.36.0)
@@ -394,6 +396,7 @@ DEPENDENCIES
   puma (= 2.15.3)
   rails (= 4.2.2)
   rails_12factor (= 0.0.2)
+  rmagick
   sass-rails (= 5.0.2)
   sdoc (= 0.4.0)
   spring (= 1.1.3)
