@@ -30,47 +30,38 @@ class StaticPagesController < ApplicationController
   def stocks_show
     @stock = Stock.find(params[:id])
     yahoo_client = YahooFinance::Client.new
-    @h = historical_data = yahoo_client.historical_quotes(@stock.symbol, { start_date: Time::now-(24*60*60*21), end_date: Time::now })
-    #@graph= histogram(@stock.symbol)
-  end
-
-  def histogram(stock_symbol)
     yahoo_client = YahooFinance::Client.new
-    @h = historical_data = yahoo_client.historical_quotes(stock_symbol, { start_date: Time::now-(24*60*60*21), end_date: Time::now })
+    @historical_data = yahoo_client.historical_quotes(@stock.symbol, { start_date: Time::now-(24*60*60*360), end_date: Time::now }) 
+    @open_history = Array.new
+    @close_history = Array.new
+    @high_history = Array.new
+    @low_history = Array.new
 
-    graph = Gruff::Line.new(600)
-    graph.title = 'Three Week History of ' + stock_symbol
+    @historical_data.reverse.each do |date_data| 
+      date_arr= Array.new
+      date_arr.push(date_data['trade_date'])
+      date_arr.push(date_data['open'].to_f)
+      @open_history.push(date_arr)
 
-    x_axis = []
+      c_date_arr= Array.new
+      c_date_arr.push(date_data['trade_date'])
+      c_date_arr.push(date_data['close'].to_f)
+      @close_history.push(c_date_arr)
 
-    historical_data.each { |row|  x_axis << row['trade_date'] }
-    start_date = x_axis.min
-    middle_date = x_axis[(x_axis.length ) / 2]
-    end_date = x_axis.max
+      h_date_arr= Array.new
+      h_date_arr.push(date_data['trade_date'])
+      h_date_arr.push(date_data['high'].to_f)
+      @high_history.push(h_date_arr)
 
-    graph.labels = { 0 => start_date, 7 => middle_date, 13 => end_date }
-
-    open_history = Array.new
-    close_history = Array.new
-    high_history = Array.new
-    low_history = Array.new
-
-    historical_data.each do |date_data| 
-      open_history.push(date_data['open'].to_f)
-      close_history.push(date_data['close'].to_f)
-      high_history.push(date_data['high'].to_f)
-      low_history.push(date_data['low'].to_f)
+      l_date_arr= Array.new
+      l_date_arr.push(date_data['trade_date'])
+      l_date_arr.push(date_data['low'].to_f)
+      @low_history.push(l_date_arr)
     end
-
-    graph.data('Open', open_history, '#B75582')
-    graph.data('High', high_history, '#79C65B' )
-    graph.data('Low', low_history)
-    graph.data('Close', close_history)
-
-    graph.x_axis_label = 'Date'
-    graph.y_axis_label = 'Dollars'
-
-    send_data(graph.to_blob, :filename => "stock.png", :type => 'image/png', :disposition=> 'inline')
+    @close_history=@close_history.to_json.html_safe
+    @open_history=@open_history.to_json.html_safe
+    @high_history=@high_history.to_json.html_safe
+    @low_history=@low_history.to_json.html_safe
   end
 
   def stocks_add
