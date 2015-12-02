@@ -29,6 +29,40 @@ class StaticPagesController < ApplicationController
 
   def stocks_show
     @stock = Stock.find(params[:id])
+
+    yahoo_client = YahooFinance::Client.new
+    
+    @historical_data = yahoo_client.historical_quotes(@stock.symbol, { start_date: Time::now-(24*60*60*360), end_date: Time::now }) 
+    @open_history = Array.new
+    @close_history = Array.new
+    @high_history = Array.new
+    @low_history = Array.new
+
+    @historical_data.reverse.each do |date_data| 
+      date_arr= Array.new
+      date_arr.push(date_data['trade_date'])
+      date_arr.push(date_data['open'].to_f)
+      @open_history.push(date_arr)
+
+      c_date_arr= Array.new
+      c_date_arr.push(date_data['trade_date'])
+      c_date_arr.push(date_data['close'].to_f)
+      @close_history.push(c_date_arr)
+
+      h_date_arr= Array.new
+      h_date_arr.push(date_data['trade_date'])
+      h_date_arr.push(date_data['high'].to_f)
+      @high_history.push(h_date_arr)
+
+      l_date_arr= Array.new
+      l_date_arr.push(date_data['trade_date'])
+      l_date_arr.push(date_data['low'].to_f)
+      @low_history.push(l_date_arr)
+    end
+    @close_history=@close_history.to_json.html_safe
+    @open_history=@open_history.to_json.html_safe
+    @high_history=@high_history.to_json.html_safe
+    @low_history=@low_history.to_json.html_safe
   end
 
 

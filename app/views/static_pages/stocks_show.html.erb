@@ -1,4 +1,3 @@
-<%= javascript_include_tag "//www.google.com/jsapi", "chartkick" %>
 <h1><%= @stock.company %> (<%= @stock.symbol %>)</h1>
  
 <div class="row stock">
@@ -22,9 +21,80 @@
             
         </div>
 
+
         <div class="jumbotron text-center col-md-6">
             <h1>Test</h1>
             
         </div>
     </div>
 </div>
+
+<div id="container" style="width:100%; height:400px;"></div>
+<%= javascript_tag do %>
+$(function () {
+console.log(<%= @open_history %>);
+	var url= 'https://www.highcharts.com/samples/data/jsonp.php?filename=' + '<%= @stock.symbol %>'.toLowerCase() + '-c.json&callback=?';
+    var start = Date.now() - 24*3600*1000*360;
+    $.getJSON(url, function (data) {
+        // Create the chart
+        console.log(data);
+        $('#container').highcharts('StockChart', {
+
+        	xAxis: {
+            type: 'datetime',
+            dateTimeLabelFormats: {
+                day: '%b %e'
+            }
+        },
+        	<!-- xAxis: {min: 1417996800000, max: 1448928000000}, -->
+            rangeSelector:{
+                enabled:false
+            },
+
+            title : {
+                text : '<%= @stock.symbol %> Stock Price'
+            },
+            <!-- console.log(<%= @open_history %>), -->
+            series : [{
+                name : 'Open',
+                data : <%= @open_history %>,
+                pointStart: start,
+            	pointInterval: 24 * 3600 * 1000 * 1.4549,
+                tooltip: {
+                    valueDecimals: 2
+                }
+            },
+			{
+                name : 'Close',
+                data : <%= @close_history %>,
+                pointStart: start,
+            	pointInterval: 24 * 3600 * 1000 * 1.4549,
+                tooltip: {
+                    valueDecimals: 2
+                }
+            },
+            {
+                name : 'High',
+                data : <%= @high_history %>,
+                pointStart: start,
+            	pointInterval: 24 * 3600 * 1000 * 1.4549,
+                tooltip: {
+                    valueDecimals: 2
+                }
+            },
+            {
+                name : 'Low',
+                data : <%= @low_history %>,
+                pointStart: start,
+            	pointInterval: 24 * 3600 * 1000 * 1.4549,
+                tooltip: {
+                    valueDecimals: 2
+                }
+            }
+            ]
+        });
+    });
+
+});
+<% end %>
+
