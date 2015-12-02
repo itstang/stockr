@@ -31,6 +31,8 @@ class StaticPagesController < ApplicationController
     @stock = Stock.find(params[:id])
 
     yahoo_client = YahooFinance::Client.new
+
+    @stock_data = yahoo_client.quotes([@stock.symbol, "NATU3.SA", "USDJPY=X"], [:ask, :bid, :high, :low])
     
     @historical_data = yahoo_client.historical_quotes(@stock.symbol, { start_date: Time::now-(24*60*60*360), end_date: Time::now }) 
     @open_history = Array.new
