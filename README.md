@@ -2,8 +2,6 @@
 
 - $ cd stockr
 - $ bundle install
-- $ brew install ghostscript
-- $ brew install imagemagick
 - $ bundle exec rake db:migrate
 - $ bundle exec rake test
 - $ rake db:seed
