@@ -1,5 +1,5 @@
 <h1><%= @stock.company %> (<%= @stock.symbol %>)</h1>
- 
+
 <table>
   <tr>
     <th>Title</th>
@@ -8,9 +8,10 @@
     <th></th>
     <th></th>
   </tr>
- 
 
-  
+
+
 </table>
 
-<p></p>
+
+<%= link_to 'Scrape', scrape_media(@stock.symbol) %>
