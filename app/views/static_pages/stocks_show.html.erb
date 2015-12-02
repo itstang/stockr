@@ -2,15 +2,30 @@
 
 <div id="container" style="width:100%; height:400px;"></div>
 
+
+
+
+
 <div class="row stock">
     <div class="container">
         <div class="jumbotron text-center col-md-6">
-            <h1>Stockr</h1>
+            <div class= "jumbo-header">
+        		Stockr
+        	</div>
+        	<div class= "jumbotron-content">
+
+        	</div>
             
         </div>
 
         <div class="jumbotron text-center col-md-6">
-            <h1>is</h1>
+            <div class= "jumbo-header">
+        		is
+        	</div>
+
+        	<div class= "jumbotron-content">
+
+        	</div>
             
         </div>
     </div>
@@ -18,14 +33,46 @@
 
 <div class="row stock">
     <div class="container">
-        <div class="jumbotron text-center col-md-6">
-            <h1>Awesome</h1>
-            
+        <div class="jumbotron text-center col-md-6">    
+        <div class= "jumbo-header">
+        	History of Stock
+        </div>
+        <div class= "jumbotron-content">
+			  <table class="table table-hover">
+			    <thead>
+			      <tr>
+			        <th>Date</th>
+			        <th>Open</th>
+			        <th>High</th>
+			        <th>Low</th>
+			        <th>Close</th>
+			      </tr>
+			    </thead>
+			    <tbody>	     
+			      	<% @historical_data[0..4].each do |date_data| %>
+			      		<tr>
+			  			<td><%= date_data['trade_date'] %></td>
+			  			<td>$<%= date_data['open'] %></td>
+			  			<td>$<%= date_data['high'] %></td>
+			  			<td>$<%= date_data['low'] %></td>
+			  			<td>$<%= date_data['close'] %></td>
+			  			</tr>
+					<% end %>
+			      
+			    </tbody>
+			  </table>
+	       </div>
         </div>
 
 
         <div class="jumbotron text-center col-md-6">
-            <h1>Test</h1>
+            <div class= "jumbo-header">
+        		Test
+        	</div>
+
+        	<div class= "jumbotron-content">
+
+        	</div>
             
         </div>
     </div>
