@@ -10,7 +10,7 @@
   <tbody>
     <% @stocks.each_with_index do |stock, index| %>
       <tr>
-        <td><%= stock.symbol %></td>
+        <td><%= link_to stock.symbol, stock_path(stock.id)  %></td>
         <td><%= stock.company %></td>
       </tr>
     <% end %>
