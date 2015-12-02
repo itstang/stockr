@@ -210,6 +210,11 @@ input {
 
 .stock .jumbotron {
   margin: 20px;
+  background-color: white;
+  border: 1px solid $gray-lighter;
+  padding-left: 0px;
+  padding-right: 0px;
+  padding-top: 0px;
 }
 
 .stock ul {
@@ -223,4 +228,32 @@ input {
 .stock button {
   margin: 5%;
   width: 100px;
+}
+
+.jumbo-header{
+    border-radius: 6px 6px 0px 0px;
+    color: #ffffff !important;
+    background-color: #3E6A96;
+    border-color: #ddd;
+    padding: 10px 15px;
+    border-bottom: 1px solid transparent;
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+}
+
+.price {
+    background-color: #5cb85c;
+}
+
+.chart {
+    background-color: #f0ad4e;
+}
+
+.news {
+    background-color: #C95037;
+}
+
+.jumbotron-content{
+  padding-left: 60px;
+  padding-right: 60px;
 }

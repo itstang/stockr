@@ -1,5 +1,7 @@
 require 'twitter.rb'
 require "#{Rails.root}/config/initializers/alchemyapi.rb"
+require 'nokogiri'
+require 'open-uri'
 
 class StaticPagesController < ApplicationController
 
@@ -73,6 +75,20 @@ class StaticPagesController < ApplicationController
     redirect_to dashboard_url
   end
 
+  def scrape_media(stock)
+    links_arr = Array.new
+    url = 'http://finance.yahoo.com/q?s='
+
+    doc = Nokogiri::HTML(open(url+stock))
+    scrape_list = doc.css('#yfi_headlines .bd ul li').children
+    scrape_list.each do |link|
+      if !link.attributes['href'].nil?
+        links_arr.push(link.attributes['href'].value.gsub(/.*?(?=\*http)\*/, ""))
+      end
+    end
+    puts links_arr.inspect
+  end
+
   def sentiment(stock_symbol)
     alchemyapi = AlchemyAPI.new()
         num_tweets=0
@@ -85,7 +101,7 @@ class StaticPagesController < ApplicationController
                                    count: 20).take(3)
 
         # remove url from tweets
-        tweets.each do |tweet|  
+        tweets.each do |tweet|
           tweet_no_url= tweet.text.dup
           tweet_no_url.gsub!(/(?:f|ht)tps?:\/[^\s]+/, '')
           new_tweets_arr.push(tweet_no_url)
@@ -93,7 +109,7 @@ class StaticPagesController < ApplicationController
 
         # remove duplicates
         new_tweets_arr.uniq!
-        new_tweets_arr.each do |tweet|  
+        new_tweets_arr.each do |tweet|
           tweet_sentiment= alchemyapi.sentiment("text", tweet)
           if tweet_sentiment["status"] == 'OK' && tweet_sentiment["docSentiment"]["score"] != nil
             total_score += tweet_sentiment["docSentiment"]["score"].to_f
@@ -116,4 +132,5 @@ class StaticPagesController < ApplicationController
 
   end
 
+  helper_method :scrape_media
 end

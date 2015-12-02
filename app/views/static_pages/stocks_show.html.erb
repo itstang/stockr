@@ -1,29 +1,39 @@
 <h1><%= @stock.company %> (<%= @stock.symbol %>)</h1>
 
 <div id="container" style="width:100%; height:400px;"></div>
-
 <div class="row stock">
     <div class="container">
         <div class="jumbotron text-center col-md-6">
-            <div class="row">
-                <div class="col-md-6">
-                    <ul>
-                        <li><b>Bidding price: </b><%= @stock_data[0].bid %></li>
-                        <li><b>Asking price: </b><%= @stock_data[0].ask %></li>
-                        <li><b>High: </b><%= @stock_data[0].high %></li>
-                        <li><b>Low: </b><%= @stock_data[0].low %></li>
-                    </ul>
-                </div>
-                <div class="col-md-6">
-                    <button type="button" class="btn btn-success">BUY</button>
-                    <button type="button" class="btn btn-danger">SELL</button>
+            <div class= "jumbo-header chart">
+                Chart
+            </div>
+            <div class= "jumbotron-content">
+                <div class="row">
+                    <div class="col-md-6">
+                        <ul>
+                            <li><b>Bidding price: </b><%= @stock_data[0].bid %></li>
+                            <li><b>Asking price: </b><%= @stock_data[0].ask %></li>
+                            <li><b>High: </b><%= @stock_data[0].high %></li>
+                            <li><b>Low: </b><%= @stock_data[0].low %></li>
+                        </ul>
+                    </div>
+                    <div class="col-md-6">
+                        <button type="button" class="btn btn-success buy_button">BUY</button>
+                        <button type="button" class="btn btn-danger buy_button">SELL</button>
+                    </div>
                 </div>
             </div>
         </div>
 
         <div class="jumbotron text-center col-md-6">
-            <h1>is</h1>
-            
+            <div class= "jumbo-header price">
+        		Price
+        	</div>
+
+        	<div class= "jumbotron-content">
+
+        	</div>
+
         </div>
     </div>
 </div>
@@ -31,14 +41,46 @@
 <div class="row stock">
     <div class="container">
         <div class="jumbotron text-center col-md-6">
-            <h1>Awesome</h1>
-            
+        <div class= "jumbo-header history">
+        	History of Stock
+        </div>
+        <div class= "jumbotron-content">
+			  <table class="table table-hover">
+			    <thead>
+			      <tr>
+			        <th>Date</th>
+			        <th>Open</th>
+			        <th>High</th>
+			        <th>Low</th>
+			        <th>Close</th>
+			      </tr>
+			    </thead>
+			    <tbody>
+			      	<% @historical_data[0..4].each do |date_data| %>
+			      		<tr>
+			  			<td><%= date_data['trade_date'] %></td>
+			  			<td>$<%= date_data['open'] %></td>
+			  			<td>$<%= date_data['high'] %></td>
+			  			<td>$<%= date_data['low'] %></td>
+			  			<td>$<%= date_data['close'] %></td>
+			  			</tr>
+					<% end %>
+
+			    </tbody>
+			  </table>
+	       </div>
         </div>
 
 
         <div class="jumbotron text-center col-md-6">
-            <h1>Test</h1>
-            
+            <div class= "jumbo-header news">
+        		News
+        	</div>
+
+        	<div class= "jumbotron-content">
+
+        	</div>
+
         </div>
     </div>
 </div>
@@ -111,3 +153,4 @@ console.log(<%= @open_history %>);
 });
 <% end %>
 
+<%= link_to 'Scrape', scrape_media(@stock.symbol) %>
