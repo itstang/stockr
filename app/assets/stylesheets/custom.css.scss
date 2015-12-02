@@ -220,12 +220,24 @@ input {
 .jumbo-header{
     border-radius: 6px 6px 0px 0px;
     color: #ffffff !important;
-    background-color: #337ab7;
+    background-color: #3E6A96;
     border-color: #ddd;
     padding: 10px 15px;
     border-bottom: 1px solid transparent;
     border-top-left-radius: 3px;
     border-top-right-radius: 3px;
+}
+
+.price {
+    background-color: #5cb85c;
+}
+
+.chart {
+    background-color: #f0ad4e;
+}
+
+.news {
+    background-color: #C95037;
 }
 
 .jumbotron-content{
