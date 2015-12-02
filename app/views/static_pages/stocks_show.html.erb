@@ -1,5 +1,7 @@
 <h1><%= @stock.company %> (<%= @stock.symbol %>)</h1>
- 
+
+<div id="container" style="width:100%; height:400px;"></div>
+
 <div class="row stock">
     <div class="container">
         <div class="jumbotron text-center col-md-6">
@@ -29,7 +31,6 @@
     </div>
 </div>
 
-<div id="container" style="width:100%; height:400px;"></div>
 <%= javascript_tag do %>
 $(function () {
 console.log(<%= @open_history %>);
