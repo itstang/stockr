@@ -4,17 +4,20 @@
 
 <div class="container">
   <div class="row">
-    <div class="col-md-6">
-      <div class="jumbo-header chart">Chart</div>
+    <div class="col-md-12">
+      <div class="jumbo-header chart"><h4>Histogram</h4></div>
       <div id="stock-chart" class="stockcontent"></div>
     </div>
-    <div class="col-md-6">
-      <div class="jumbo-header price">Price</div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-12">
+      <div class="jumbo-header price"><h4>Price</h4></div>
       <div class="stockcontent">
         <div class="row">
           <div class="col-md-8">
-            <ul>
-              <li><b>Bidding price: </b>$<%= @stock_data[0].bid %></li>
+            <ul class="price-info">
+              <li><strong>Bidding price: </strong>$<%= @stock_data[0].bid %></li>
               <li><b>Asking price: </b>$<%= @stock_data[0].ask %></li>
               <li><b>High: </b>$<%= @stock_data[0].high %></li>
               <li><b>Low: </b>$<%= @stock_data[0].low %></li>
@@ -23,13 +26,11 @@
                     <b style="color:red;">Look to <%= @signal %></b>
                 <% elsif @signal  == "Buy" %>
                     <b style="color:green;">Look to <%= @signal %></b>
-                <% else%>
-                    <b>Look to <%= @signal %></b>
+                <% else %>
+                    <b style="color:orange;">Look to <%= @signal %></b>
                 <% end %>
               </li>
             </ul>
-          </div>
-          <div class="col-md-4">
             <button type="button" class="btn btn-success" data-toggle="modal" data-target="#buyModal">BUY</button>
             <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#sellModal">SELL</button>
           </div>
@@ -40,7 +41,7 @@
 
   <div class="row">
     <div class="col-md-6">
-      <div class="jumbo-header history">History</div>
+      <div class="jumbo-header history"><h4>History</h4></div>
       <div class="stockcontent">
         <table class="table table-hover">
           <thead>
@@ -67,9 +68,9 @@
       </div>
     </div>
     <div class="col-md-6">
-      <div class="jumbo-header news">News</div>
+      <div class="jumbo-header news"><h4><%= @stock.company %> in the News</h4></div>
       <div class="stockcontent">
-        <ul class="media-links">
+        <ol class="media-links">
           <% @media_links.each do |link| %>
             <li><a href="<%= link['link'] %>"><%= link['name']  %></a></li>
           <% end %>
