@@ -18,22 +18,23 @@ class StaticPagesController < ApplicationController
   def dashboard
     y_client = YahooFinance::Client.new
     @user_watches = User_Watches.joins('LEFT OUTER JOIN stocks ON stocks.symbol = user_watches.symbol').where(email: current_user.email)
+    @user_owns = User_Owns.where(email: current_user.email)
+    @data_watches = y_client.quotes(@user_watches.pluck(:symbol), [:name, :day_value_change, :bid, :sentiment])
+    @data_owns = y_client.quotes(@user_owns.pluck(:symbol), [:name, :day_value_change, :bid, :sentiment])
 
     @stock_symbols = []
     @stock_shares = []
     @stock_prices = []
 
-    @user_owns = User_Owns.where(email: current_user.email)
-    @user_owns.each do |stock|
+    @user_owns.each_with_index do |stock, index|
       @stock_symbols.push(stock.symbol)
       @stock_shares.push(stock.shares)
+      @stock_prices.push(@data_owns[index].bid)
     end
 
-    @data = y_client.quotes(@user_owns.pluck(:symbol), [:name, :day_value_change, :bid, :sentiment])
 
     @user_watches.each_with_index do |stock, index|
-        # @data[index].sentiment= sentiment(stock.symbol)
-        @stock_prices.push(@data[index].bid)
+        # @data_watches[index].sentiment= sentiment(stock.symbol)
     end
   end
 
