@@ -117,9 +117,7 @@
     datasets : [
       {
         fillColor : "rgba(151,187,205,0.5)",
-        strokeColor : "rgba(151,187,205,0.8)",
         highlightFill : "rgba(151,187,205,0.75)",
-        highlightStroke : "rgba(151,187,205,1)",
         data : prices
       }
     ]
@@ -135,14 +133,22 @@
 
     ctx = document.getElementById("pie-canvas").getContext("2d");
     var myPie = new Chart(ctx).Pie(pieData, {
+      responsive: true,
       legendTemplate : "<ul><%% for (var i=0; i<symbols.length; i++){%><li><span style=\"background-color:<%%=base[i]%>\"></span><%%if(symbols[i]){%><%%=symbols_links[i]%><%%}%></li><%%}%></ul>"
     });
 
     document.getElementById('js-legend').innerHTML = myPie.generateLegend();
 
     ctx = document.getElementById("bar-canvas").getContext("2d");
-    window.myBar = new Chart(ctx).Bar(barChartData, {
+    var myBar = new Chart(ctx).Bar(barChartData, {
       responsive : true
     });
+
+    $.each(myBar.datasets[0].bars, function(i, bar) {
+      bar.fillColor = base[i];
+      bar.highlightFill = base[i].replace('0.5', '0.75');
+    });
+
+    myBar.update();
   });
 <% end %>
