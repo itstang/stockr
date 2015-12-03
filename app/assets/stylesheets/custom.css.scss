@@ -285,18 +285,11 @@ input {
 
 .balance-graph {
   width: 100%;
-  height: 50% !important;
+  height: 350px !important;
 }
 
 canvas{
     width: 100% !important;
     max-width: 800px;
     height: auto !important;
-}
-
-.row {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display:         flex;
 }
