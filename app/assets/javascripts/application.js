@@ -15,4 +15,5 @@
 //= require bootstrap
 //= require highstock
 //= require turbolinks
+//= require Chart/Chart.min
 //= require_tree .
