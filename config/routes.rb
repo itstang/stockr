@@ -16,6 +16,8 @@ Rails.application.routes.draw do
   get    'signup'  => 'users#new'
   get    'login'   => 'sessions#new'
   post   'login'   => 'sessions#create'
+  post   'stocks/buy' => 'static_pages#stocks_buy'
+  post   'stocks/sell' => 'static_pages#stocks_sell'
   delete 'logout'  => 'sessions#destroy'
   resources :users
   resources :stocks

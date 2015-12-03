@@ -23,7 +23,7 @@
     </tr>
   </thead>
   <tbody>
-    <% @user_owns.each_with_index do |stock, index| %>
+    <% @user_watches.each_with_index do |stock, index| %>
       <tr>
         <td><%= stock.symbol.upcase %></td>
         <td><%= @data[index].name %></td>
