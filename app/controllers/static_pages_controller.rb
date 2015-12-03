@@ -23,13 +23,13 @@ class StaticPagesController < ApplicationController
     @stock_shares = []
     @stock_prices = []
 
-
+    @user_owns = User_Owns.where(email: current_user.email)
     @user_owns.each do |stock|
       @stock_symbols.push(stock.symbol)
       @stock_shares.push(stock.shares)
     end
 
-    @data = y_client.quotes(@user_watches.pluck(:symbol), [:name, :day_value_change, :bid, :sentiment])
+    @data = y_client.quotes(@user_owns.pluck(:symbol), [:name, :day_value_change, :bid, :sentiment])
 
     @user_watches.each_with_index do |stock, index|
         @data[index].sentiment= sentiment(stock.symbol)
