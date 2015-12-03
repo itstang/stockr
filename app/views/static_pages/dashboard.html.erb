@@ -63,10 +63,10 @@
             <% @user_watches.each_with_index do |stock, index| %>
               <tr>
                 <td><%= stock.symbol.upcase %></td>
-                <td><%= @data[index].name %></td>
-                <td>$<%= @data[index].day_value_change %></td>
-                <td>$<%= @data[index].bid %></td>
-                <td><%= @data[index].sentiment %></td>
+                <td><%= @data_watches[index].name %></td>
+                <td>$<%= @data_watches[index].day_value_change %></td>
+                <td>$<%= @data_watches[index].bid %></td>
+                <td><%= @data_watches[index].sentiment %></td>
               </tr>
             <% end %>
           </tbody>
