@@ -27,7 +27,7 @@ class StaticPagesController < ApplicationController
   end
 
   def stocks
-    @stocks = Stock.all.paginate(page: params[:page])
+    @stocks = Stock.all
   end
 
   def stocks_show
@@ -93,8 +93,7 @@ class StaticPagesController < ApplicationController
   def stocks_buy
     num_shares = params[:user_owns][:shares].to_i
     total_price = params[:user_owns][:price].to_f * num_shares
-    t = Transaction.create(transaction_type: "buy", email: current_user.email, symbol: params[:user_owns][:symbol], shares: num_shares, amount: total_price)
-    User_Makes.create(email: current_user.email, transaction_id: t.id)
+    Transaction.create(transaction_type: "buy", amount: total_price)
 
     user_owns_symbol = User_Owns.where(email: current_user.email, symbol:params[:user_owns][:symbol])
     if user_owns_symbol.empty?
@@ -131,8 +130,7 @@ class StaticPagesController < ApplicationController
       end
 
       total_price = params[:user_owns][:price].to_f * num_shares
-      t = Transaction.create(transaction_type: "sell", email: current_user.email, symbol: params[:user_owns][:symbol], shares: num_shares, amount: total_price)
-      User_Makes.create(email: current_user.email, transaction_id: t.id)
+      Transaction.create(transaction_type: "sell", amount: total_price)
 
       user = User.find_by(email: current_user.email)
       user.balance += total_price
@@ -215,7 +213,7 @@ class StaticPagesController < ApplicationController
   end
 
   def history
-    @transactions = Transaction.where(email: current_user.email)
+    @user ||= User.find(session[:email]) if session[:email]
   end
 
   def contact
