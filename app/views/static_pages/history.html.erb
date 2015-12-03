@@ -1,5 +1,28 @@
 <% provide(:title, "History") %>
 <h1>History</h1>
-<p>
-  History goes here
-</p>
+
+<div class="container">        
+  <table class="table table-hover">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Symbol</th>
+        <th>Shares</th>
+        <th>Total amount</th>
+      </tr>
+    </thead>
+    <tbody>
+   	  <% @transactions.each do |t| %>
+        <tr>
+          <td><%= t.transaction_type.upcase %></td>
+          <td><%= t.symbol %></td>
+          <td><%= t.shares %></td>
+          <td><%= number_to_currency(t.amount) %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
+
+
+

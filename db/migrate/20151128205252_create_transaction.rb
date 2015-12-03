@@ -1,8 +1,10 @@
 class CreateTransaction < ActiveRecord::Migration
   def change
     create_table :transactions do |t|
-      t.integer :transaction_id
-      t.string :type
+      t.string  :transaction_type
+      t.string  :email
+      t.string  :symbol
+      t.integer :shares
       t.integer :amount
     end
   end

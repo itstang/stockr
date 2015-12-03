@@ -56,20 +56,17 @@ ActiveRecord::Schema.define(version: 20151128214509) do
   end
 
   create_table "transactions", force: :cascade do |t|
-    t.integer "transaction_id"
-    t.string  "type"
+    t.string  "transaction_type"
+    t.string  "email"
+    t.string  "symbol"
+    t.integer "shares"
     t.integer "amount"
   end
-
-  add_index "transactions", ["transaction_id"], name: "index_transactions_on_transaction_id", unique: true
 
   create_table "user_makes", force: :cascade do |t|
     t.string  "email"
     t.integer "transaction_id"
   end
-
-  add_index "user_makes", ["email"], name: "index_user_makes_on_email", unique: true
-  add_index "user_makes", ["transaction_id"], name: "index_user_makes_on_transaction_id", unique: true
 
   create_table "user_owns", force: :cascade do |t|
     t.string  "email"
@@ -81,9 +78,6 @@ ActiveRecord::Schema.define(version: 20151128214509) do
     t.string "email"
     t.string "symbol"
   end
-
-  add_index "user_watches", ["email"], name: "index_user_watches_on_email", unique: true
-  add_index "user_watches", ["symbol"], name: "index_user_watches_on_symbol", unique: true
 
   create_table "users", force: :cascade do |t|
     t.string   "name"
