@@ -57,6 +57,9 @@ ActiveRecord::Schema.define(version: 20151128214509) do
 
   create_table "transactions", force: :cascade do |t|
     t.string  "transaction_type"
+    t.string  "email"
+    t.string  "symbol"
+    t.integer "shares"
     t.integer "amount"
   end
 
@@ -64,8 +67,6 @@ ActiveRecord::Schema.define(version: 20151128214509) do
     t.string  "email"
     t.integer "transaction_id"
   end
-
-  add_index "user_makes", ["email"], name: "index_user_makes_on_email", unique: true
 
   create_table "user_owns", force: :cascade do |t|
     t.string  "email"

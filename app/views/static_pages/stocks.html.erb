@@ -26,6 +26,7 @@
           <td><%= stock.company %></td>
         </tr>
       <% end %>
+      <%= will_paginate @stocks%>
     <% else%>
       <% @stocks.where(symbol: params[:search].upcase).each do |stock| %>
         <tr>
