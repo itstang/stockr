@@ -40,6 +40,11 @@ class StaticPagesController < ApplicationController
     @historical_data = yahoo_client.historical_quotes(@stock.symbol, { start_date: Time::now-(24*60*60*360), end_date: Time::now })
     @twenty_day_exp_MA= moving_avg(20)
     @fifty_day_exp_MA= moving_avg(50)
+    @signal = "Buy"
+
+    if(@twenty_day_exp_MA < @fifty_day_exp_MA)
+      @signal = "Sell"
+    end
 
     @open_history = Array.new
     @close_history = Array.new

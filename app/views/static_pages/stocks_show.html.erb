@@ -16,8 +16,12 @@
                 <li><b>Asking price: </b><%= @stock_data[0].ask %></li>
                 <li><b>High: </b><%= @stock_data[0].high %></li>
                 <li><b>Low: </b><%= @stock_data[0].low %></li>
-                <li><b>Moving Average 50 Day: </b><%= (number_with_precision(@fifty_day_exp_MA, :precision => 2) || 0) %></li>
-                <li><b>Moving Average 20 Day: </b><%= (number_with_precision(@twenty_day_exp_MA, :precision => 2) || 0) %></li>
+                <li><b>Recommendation (Based on Moving Average): </b>
+                    <% if @signal  == "Sell" %>
+                        <b style="color:red;"><%= @signal %></b>
+                    <% else %>
+                        <b style="color:green;"><%= @signal %></b>
+                    <% end %></li>
             </ul>
           </div>
           <div class="col-md-6">
