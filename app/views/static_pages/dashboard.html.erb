@@ -82,42 +82,24 @@
         <div id="canvas-holder">
           <canvas id="pie-canvas" width="300" height="300"> </canvas>
         </div>
+        
+        <%= javascript_tag do %>
+          var randRGB = function () {
+              return "rgba("+ Math.floor(Math.random()*256) + "," + Math.floor(Math.random()*256) + "," + Math.floor(Math.random()*256) + ",";
+          };
+          var prices = <%= raw @stock_prices.to_json %>
+          var symbols = <%= raw @stock_symbols.to_json %>
+          var shares = <%= raw @stock_shares.to_json %>
+          var pieData = [];
+          var i = 0;
+          var base;
+          for (i = 0; i < shares.length; i++) {
+            base = randRGB();
 
-
-        <script>
-          var pieData = [
-              {
-                value: 300,
-                color:"#F7464A",
-                highlight: "#FF5A5E",
-                label: "Red"
-              },
-              {
-                value: 50,
-                color: "#46BFBD",
-                highlight: "#5AD3D1",
-                label: "Green"
-              },
-              {
-                value: 100,
-                color: "#FDB45C",
-                highlight: "#FFC870",
-                label: "Yellow"
-              },
-              {
-                value: 40,
-                color: "#949FB1",
-                highlight: "#A8B3C5",
-                label: "Grey"
-              },
-              {
-                value: 120,
-                color: "#4D5360",
-                highlight: "#616774",
-                label: "Dark Grey"
-              }
-            ];
-        </script>
+            pieData.push({value: shares[i], color: "" + base + "0.5)", highlight: "" + base + "0.75)", label: symbols[i]})
+          }
+          
+        <% end %>
 
       </td>
 

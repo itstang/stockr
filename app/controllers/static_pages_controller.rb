@@ -2,6 +2,7 @@ require 'twitter.rb'
 require "#{Rails.root}/config/initializers/alchemyapi.rb"
 require 'nokogiri'
 require 'open-uri'
+require 'json'
 
 class StaticPagesController < ApplicationController
 
@@ -19,9 +20,19 @@ class StaticPagesController < ApplicationController
     @user_owns = User_Owns.where(email: current_user.email)
     @data = y_client.quotes(@user_owns.pluck(:symbol), [:name, :day_value_change, :bid, :sentiment])
 
+    @stock_symbols = []
+    @stock_shares = []
+    @stock_prices = []
+
+
+    @user_owns.each do |stock|
+      @stock_symbols.push(stock.symbol)
+      @stock_shares.push(stock.shares)
+    end
 
     @user_owns.each_with_index do |stock, index|
         @data[index].sentiment= sentiment(stock.symbol)
+        @stock_prices.push(@data[index].bid)
     end
   end
 
