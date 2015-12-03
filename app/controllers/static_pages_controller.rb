@@ -39,7 +39,7 @@ class StaticPagesController < ApplicationController
   end
 
   def stocks
-    @stocks = Stock.all
+    @stocks = Stock.all.page(params[:page])
   end
 
   def stocks_show
