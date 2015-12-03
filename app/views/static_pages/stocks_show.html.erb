@@ -15,8 +15,8 @@
                             <li><b>Asking price: </b><%= @stock_data[0].ask %></li>
                             <li><b>High: </b><%= @stock_data[0].high %></li>
                             <li><b>Low: </b><%= @stock_data[0].low %></li>
-                            <li><b>Moving Average 50 Day: </b><%= @fifty_day_exp_MA %></li>
-                            <li><b>Moving Average 20 Day: </b><%= @twenty_day_exp_MA %></li>
+                            <li><b>Moving Average 50 Day: </b><%= (number_with_precision(@fifty_day_exp_MA, :precision => 2) || 0) %></li>
+                            <li><b>Moving Average 20 Day: </b><%= (number_with_precision(@twenty_day_exp_MA, :precision => 2) || 0) %></li>
                         </ul>
                     </div>
                     <div class="col-md-6">
@@ -61,10 +61,10 @@
 			      	<% @historical_data[0..4].each do |date_data| %>
 			      		<tr>
 			  			<td><%= date_data['trade_date'] %></td>
-			  			<td>$<%= date_data['open'] %></td>
-			  			<td>$<%= date_data['high'] %></td>
-			  			<td>$<%= date_data['low'] %></td>
-			  			<td>$<%= date_data['close'] %></td>
+			  			<td>$<%= (number_with_precision(date_data['open'], :precision => 2) || 0) %></td>
+			  			<td>$<%= (number_with_precision(date_data['high'], :precision => 2) || 0) %></td>
+			  			<td>$<%=(number_with_precision(date_data['low'], :precision => 2) || 0) %></td>
+			  			<td>$<%= (number_with_precision(date_data['close'], :precision => 2) || 0) %></td>
 			  			</tr>
 					<% end %>
 
