@@ -16,8 +16,14 @@
                 <li><b>Asking price: </b><%= @stock_data[0].ask %></li>
                 <li><b>High: </b><%= @stock_data[0].high %></li>
                 <li><b>Low: </b><%= @stock_data[0].low %></li>
-                <li><b>Moving Average 50 Day: </b><%= (number_with_precision(@fifty_day_exp_MA, :precision => 2) || 0) %></li>
-                <li><b>Moving Average 20 Day: </b><%= (number_with_precision(@twenty_day_exp_MA, :precision => 2) || 0) %></li>
+                <li><b>Analysis: </b>
+                    <% if @signal  == "Sell" %>
+                        <b style="color:red;">Look to <%= @signal %></b>
+                    <% elsif @signal  == "Buy" %>
+                        <b style="color:green;">Look to <%= @signal %></b>
+                    <% else%>
+                        <b>Look to <%= @signal %></b>
+                    <% end %></li>
             </ul>
           </div>
           <div class="col-md-6">
@@ -127,12 +133,10 @@
 
 <%= javascript_tag do %>
 $(function () {
-console.log(<%= @open_history %>);
 	var url= 'https://www.highcharts.com/samples/data/jsonp.php?filename=' + '<%= @stock.symbol %>'.toLowerCase() + '-c.json&callback=?';
     var start = Date.now() - 24*3600*1000*360;
     $.getJSON(url, function (data) {
         // Create the chart
-        console.log(data);
         $('#stock-chart').highcharts('StockChart', {
 
         	xAxis: {
@@ -149,7 +153,6 @@ console.log(<%= @open_history %>);
             title : {
                 text : '<%= @stock.symbol %> Stock Price'
             },
-            <!-- console.log(<%= @open_history %>), -->
             series : [{
                 name : 'Open',
                 data : <%= @open_history %>,
