@@ -198,7 +198,7 @@ class StaticPagesController < ApplicationController
           if tweet_sentiment["status"] == 'OK' && tweet_sentiment["docSentiment"]["score"] != nil
             cur_sentiment= tweet_sentiment["docSentiment"]["score"].to_f
             if(verified == true)
-              cur_sentiment += cur_sentiment + (cur_sentiment*0.5)
+              cur_sentiment += (cur_sentiment*0.5)
             end
             total_score += cur_sentiment
             num_tweets= num_tweets + 1
