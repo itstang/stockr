@@ -57,8 +57,7 @@ class StaticPagesController < ApplicationController
 
     if(twenty_day_exp_MA < fifty_day_exp_MA && @sentiment < 0)
       @signal = "Sell"
-    end
-    else if(twenty_day_exp_MA > fifty_day_exp_MA && @sentiment > 0.25)
+    elsif(twenty_day_exp_MA > fifty_day_exp_MA && @sentiment > 0.25)
       @signal = "Buy"
     end
 
@@ -105,7 +104,6 @@ class StaticPagesController < ApplicationController
   def stocks_buy
     num_shares = params[:user_owns][:shares].to_i
     total_price = params[:user_owns][:price].to_f * num_shares
-    
 
     user = User.find_by(email: current_user.email)
     user_owns_symbol = User_Owns.where(email: current_user.email, symbol:params[:user_owns][:symbol])
@@ -123,7 +121,7 @@ class StaticPagesController < ApplicationController
       Transaction.create(transaction_type: "buy", email: current_user.email, symbol: params[:user_owns][:symbol], shares: num_shares, amount: total_price)
       user.balance -= total_price
       user.save
-    end 
+    end
 
     redirect_to dashboard_url
   end
