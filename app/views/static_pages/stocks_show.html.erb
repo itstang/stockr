@@ -16,7 +16,6 @@
               <li><b>Asking price: </b>$<%= @stock_data[0].ask %></li>
               <li><b>High: </b>$<%= @stock_data[0].high %></li>
               <li><b>Low: </b>$<%= @stock_data[0].low %></li>
-              <li><%= @sentiment%></li>
               <li><b>Analysis: </b>
                 <% if @signal  == "Sell" %>
                     <b style="color:red;">Look to <%= @signal %></b>
