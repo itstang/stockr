@@ -105,20 +105,25 @@ class StaticPagesController < ApplicationController
   def stocks_buy
     num_shares = params[:user_owns][:shares].to_i
     total_price = params[:user_owns][:price].to_f * num_shares
-    Transaction.create(transaction_type: "buy", amount: total_price)
-
-    user_owns_symbol = User_Owns.where(email: current_user.email, symbol:params[:user_owns][:symbol])
-    if user_owns_symbol.empty?
-      User_Owns.create(email: current_user.email, symbol: params[:user_owns][:symbol], shares: num_shares)
-    else
-      user_owns = User_Owns.where(:email => current_user.email, :symbol => params[:user_owns][:symbol])
-      user_owns[0].shares += num_shares
-      user_owns[0].save
-    end
+    
 
     user = User.find_by(email: current_user.email)
-    user.balance -= total_price
-    user.save
+    user_owns_symbol = User_Owns.where(email: current_user.email, symbol:params[:user_owns][:symbol])
+    if total_price > user.balance
+      #do nothing
+    else
+      if user_owns_symbol.empty?
+        User_Owns.create(email: current_user.email, symbol: params[:user_owns][:symbol], shares: num_shares)
+      else
+        user_owns = User_Owns.where(:email => current_user.email, :symbol => params[:user_owns][:symbol])
+        user_owns[0].shares += num_shares
+        user_owns[0].save
+      end
+
+      Transaction.create(transaction_type: "buy", email: current_user.email, symbol: params[:user_owns][:symbol], shares: num_shares, amount: total_price)
+      user.balance -= total_price
+      user.save
+    end 
 
     redirect_to dashboard_url
   end
@@ -142,7 +147,7 @@ class StaticPagesController < ApplicationController
       end
 
       total_price = params[:user_owns][:price].to_f * num_shares
-      Transaction.create(transaction_type: "sell", amount: total_price)
+      Transaction.create(transaction_type: "sell", email: current_user.email, symbol: params[:user_owns][:symbol], shares: num_shares, amount: total_price)
 
       user = User.find_by(email: current_user.email)
       user.balance += total_price
@@ -225,7 +230,7 @@ class StaticPagesController < ApplicationController
   end
 
   def history
-    @user ||= User.find(session[:email]) if session[:email]
+    @transactions = Transaction.where(email: current_user.email)
   end
 
   def contact
