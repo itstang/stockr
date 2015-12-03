@@ -12,13 +12,14 @@ tweets_hash = Hash.new
 # due to alchemy api limitations (1000 requests), we are only using four tweets for now
 tweets = $twitter.search('$' + 'AAPL' + ' -rt',
                                result_type: 'mixed',
-                               count: 20).take(10)
+                               count: 20).take(50)
 
 # remove url from tweets
 tweets.each do |tweet|	
 	tweet_no_url= tweet.text.dup
 	tweet_no_url.gsub!(/(?:f|ht)tps?:\/[^\s]+/, '')
 	tweets_hash[tweet_no_url]= tweet.user.verified?
+
 end
 
 # remove duplicates
