@@ -17,12 +17,14 @@
               <li><b>High: </b>$<%= @stock_data[0].high %></li>
               <li><b>Low: </b>$<%= @stock_data[0].low %></li>
               <li><b></b><%= @sentiment%></li>
-              <li><b>Recommendation (Based on Moving Average): </b>
-                  <% if @signal  == "Sell" %>
-                      <b style="color:red;">Look to <%= @signal %></b>
-                  <% else %>
-                      <b style="color:green;">Look to <%= @signal %></b>
-                  <% end %>
+              <li><b>Analysis: </b>
+                <% if @signal  == "Sell" %>
+                    <b style="color:red;">Look to <%= @signal %></b>
+                <% elsif @signal  == "Buy" %>
+                    <b style="color:green;">Look to <%= @signal %></b>
+                <% else%>
+                    <b>Look to <%= @signal %></b>
+                <% end %>
               </li>
             </ul>
           </div>

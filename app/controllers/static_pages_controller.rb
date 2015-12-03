@@ -41,10 +41,13 @@ class StaticPagesController < ApplicationController
     @historical_data = yahoo_client.historical_quotes(@stock.symbol, { start_date: Time::now-(24*60*60*360), end_date: Time::now })
     twenty_day_exp_MA= moving_avg(20)
     fifty_day_exp_MA= moving_avg(50)
-    @signal = "Buy"
+    @signal = "Hold"
 
-    if(twenty_day_exp_MA < fifty_day_exp_MA && @sentiment )
+    if(twenty_day_exp_MA < fifty_day_exp_MA && @sentiment < 0)
       @signal = "Sell"
+    end
+    else if(twenty_day_exp_MA > fifty_day_exp_MA && @sentiment > 0.25)
+      @signal = "Buy"
     end
 
     @open_history = Array.new
@@ -195,7 +198,7 @@ class StaticPagesController < ApplicationController
           if tweet_sentiment["status"] == 'OK' && tweet_sentiment["docSentiment"]["score"] != nil
             cur_sentiment= tweet_sentiment["docSentiment"]["score"].to_f
             if(verified == true)
-              cur_sentiment += cur_sentiment + (cur_sentiment*0.5)
+              cur_sentiment += (cur_sentiment*0.5)
             end
             total_score += cur_sentiment
             num_tweets= num_tweets + 1
