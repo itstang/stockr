@@ -25,11 +25,13 @@ class StaticPagesController < ApplicationController
     @stock_symbols = []
     @stock_shares = []
     @stock_prices = []
+    @stock_ids = []
 
     @user_owns.each_with_index do |stock, index|
       @stock_symbols.push(stock.symbol)
       @stock_shares.push(stock.shares)
       @stock_prices.push(@data_owns[index].bid)
+      @stock_ids.push(stock.id)
     end
 
 
@@ -49,17 +51,17 @@ class StaticPagesController < ApplicationController
     yahoo_client = YahooFinance::Client.new
 
     @stock_data = yahoo_client.quotes([@stock.symbol, "NATU3.SA", "USDJPY=X"], [:ask, :bid, :high, :low, :moving_average_50_day, :moving_average_200_day])
-    @sentiment= sentiment(@stock.symbol)
+    #@sentiment= sentiment(@stock.symbol)
     @historical_data = yahoo_client.historical_quotes(@stock.symbol, { start_date: Time::now-(24*60*60*360), end_date: Time::now })
     twenty_day_exp_MA= moving_avg(20)
     fifty_day_exp_MA= moving_avg(50)
     @signal = "Hold"
 
-    if(twenty_day_exp_MA < fifty_day_exp_MA && @sentiment < 0)
-      @signal = "Sell"
-    elsif(twenty_day_exp_MA > fifty_day_exp_MA && @sentiment > 0.25)
-      @signal = "Buy"
-    end
+    # if(twenty_day_exp_MA < fifty_day_exp_MA && @sentiment < 0)
+    #   @signal = "Sell"
+    # elsif(twenty_day_exp_MA > fifty_day_exp_MA && @sentiment > 0.25)
+    #   @signal = "Buy"
+    # end
 
     @open_history = Array.new
     @close_history = Array.new
@@ -97,7 +99,15 @@ class StaticPagesController < ApplicationController
   end
 
   def stocks_add
-    User_Watches.create(email: current_user.email, symbol: params[:symbol])
+    if !Stock.find_by(symbol: params[:symbol]).nil?
+      User_Watches.create(email: current_user.email, symbol: params[:symbol])
+    end
+    redirect_to dashboard_url
+  end
+
+  def stocks_remove
+    User_Watches.find_by(email: current_user.email, symbol: params[:user_watches][:symbol]).destroy
+    flash[:success] = "Stock removed from watchlist"
     redirect_to dashboard_url
   end
 
@@ -122,7 +132,7 @@ class StaticPagesController < ApplicationController
       user.balance -= total_price
       user.save
     end
-
+    flash[:success] = "You bought " + num_shares.to_s + " shares of " + params[:user_owns][:symbol].to_s + " for $" + total_price.to_s + "!"
     redirect_to dashboard_url
   end
 
@@ -152,8 +162,7 @@ class StaticPagesController < ApplicationController
       user.save
     end
 
-
-
+    flash[:success] = "You sold " + num_shares.to_s + " share(s) of " + params[:user_owns][:symbol].to_s + " for $" + total_price.to_s + "!"
     redirect_to dashboard_url
   end
 
@@ -228,7 +237,7 @@ class StaticPagesController < ApplicationController
   end
 
   def history
-    @transactions = Transaction.where(email: current_user.email)
+    @transactions = Transaction.where(email: current_user.email).order(id: :desc)
   end
 
   def contact

@@ -10,12 +10,28 @@
       </div>
     </div>
     <div class="col-md-6">
+      <div class="jumbo-header"><h4>Portfolio</h4></div>
+      <div class="stockcontent">
+        <canvas id="pie-canvas" class="pie-graph"></canvas>
+        <div id="js-legend" class="chart-legend clearfix"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-6">
+      <div class="jumbo-header"><h4>Purchased Stock Prices</h4></div>
+      <div class="stockcontent">
+        <canvas id="bar-canvas" class="balance-graph"></canvas>
+      </div>
+    </div>
+    <div class="col-md-6">
       <div class="jumbo-header"><h4>Watch list</h4></div>
       <div class="stockcontent">
         <%= form_tag(stocks_add_path, method: "get") do %>
           <%= label_tag(:symbol, "Stock Symbol:") %>
           <%= text_field_tag(:symbol) %>
-          <%= submit_tag("Add to watch list", :class => "btn btn-default") %>
+          <button class="btn btn-default watch-btn" type="submit"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Add to watch list</button>
         <% end %>
         <br />
         <table class="table table-striped">
@@ -25,36 +41,26 @@
               <th>Company Name</th>
               <th>Asking Price</th>
               <th>Bidding Price</th>
-              <th>Sentiment</th>
+              <th></th>
             </tr>
           </thead>
           <tbody>
             <% @user_watches.each_with_index do |stock, index| %>
               <tr>
-                <td><%= stock.symbol.upcase %></td>
+                <td><%= link_to stock.symbol.upcase, stock_path(stock.id)  %></td>
                 <td><%= @data_watches[index].name %></td>
                 <td>$<%= @data_watches[index].day_value_change %></td>
                 <td>$<%= @data_watches[index].bid %></td>
-                <td><%= @data_watches[index].sentiment %></td>
+                <td>
+                  <%= form_for :user_watches, url: stocks_remove_path do |f| %>
+                    <%= f.hidden_field :symbol, :value => stock.symbol %>
+                  <%= f.submit "Remove", :class => "btn btn-danger btn-sm" %>
+                  <% end %>
+                </td>
               </tr>
             <% end %>
           </tbody>
         </table>
-      </div>
-    </div>
-  </div>
-
-  <div class="row">
-    <div class="col-md-6">
-      <div class="jumbo-header"><h4>Portfolio</h4></div>
-      <div class="stockcontent">
-        <canvas id="pie-canvas"></canvas>
-      </div>
-    </div>
-    <div class="col-md-6">
-      <div class="jumbo-header"><h4>Purchased Stock Prices</h4></div>
-      <div class="stockcontent">
-        <canvas id="bar-canvas"></canvas>
       </div>
     </div>
   </div>
@@ -79,23 +85,30 @@
   }
 
   var randRGB = function () {
-      return "rgba("+ Math.floor(Math.random()*256) + "," + Math.floor(Math.random()*256) + "," + Math.floor(Math.random()*256) + ",";
+      return "rgba("+ Math.floor(Math.random()*256) + "," + Math.floor(Math.random()*256) + "," + Math.floor(Math.random()*256) + ", 0.5)";
   };
 
   var prices = <%= raw @stock_prices.to_json %>
   var symbols = <%= raw @stock_symbols.to_json %>
   var shares = <%= raw @stock_shares.to_json %>
+  var ids = <%= raw @stock_ids.to_json %>
 
+  var symbols_links = symbols.map(function(sym, index) {
+    return '<a href="/stocks/' + ids[index] + '">' + sym + '</a>';
+  });
 
   var pieData = [];
   var i = 0;
-  var base;
+  var base = [];
   for (i = 0; i < shares.length; i++) {
-    base = randRGB();
-
-    pieData.push({value: shares[i], color: "" + base + "0.5)", highlight: "" + base + "0.75)", label: symbols[i]})
+    base.push(randRGB());
+    pieData.push({
+      value: shares[i],
+      color: base[i],
+      highlight: base[i].replace('0.5', '0.75'),
+      label:symbols[i]
+    });
   }
-
 
   var randomScalingFactor = function(){ return Math.round(Math.random()*100)};
 
@@ -112,18 +125,24 @@
     ]
   }
 
-  window.onload = function(){
+  $(document).ready(function() {
     var ctx = document.getElementById("line-canvas").getContext("2d");
     ctx.canvas.width = 300;
     ctx.canvas.height = 300;
     window.myLine = new Chart(ctx).Line(lineChartData, {
       responsive: true
-    });
+    })
+
     ctx = document.getElementById("pie-canvas").getContext("2d");
-        window.myPie = new Chart(ctx).Pie(pieData);
+    var myPie = new Chart(ctx).Pie(pieData, {
+      legendTemplate : "<ul><%% for (var i=0; i<symbols.length; i++){%><li><span style=\"background-color:<%%=base[i]%>\"></span><%%if(symbols[i]){%><%%=symbols_links[i]%><%%}%></li><%%}%></ul>"
+    });
+
+    document.getElementById('js-legend').innerHTML = myPie.generateLegend();
+
     ctx = document.getElementById("bar-canvas").getContext("2d");
     window.myBar = new Chart(ctx).Bar(barChartData, {
       responsive : true
     });
-  }
+  });
 <% end %>
