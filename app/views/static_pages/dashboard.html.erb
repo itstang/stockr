@@ -23,9 +23,9 @@
     </tr>
   </thead>
   <tbody>
-    <% @user_owns.each_with_index do |stock, index| %>
+    <% @user_watches.each_with_index do |stock, index| %>
       <tr>
-        <td><%= stock.symbol %></td>
+        <td><%= stock.symbol.upcase %></td>
         <td><%= @data[index].name %></td>
         <td>$<%= @data[index].day_value_change %></td>
         <td>$<%= @data[index].bid %></td>

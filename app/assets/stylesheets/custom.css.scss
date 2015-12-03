@@ -217,6 +217,19 @@ input {
   padding-top: 0px;
 }
 
+.stock ul {
+  text-align: left;
+}
+
+.stock li {
+  list-style-type: none;
+}
+
+.stock button {
+  margin: 5%;
+  width: 100px;
+}
+
 .jumbo-header{
     border-radius: 6px 6px 0px 0px;
     color: #ffffff !important;
@@ -260,4 +273,8 @@ input {
       margin-bottom: 12px;
     }
   }
+}
+
+.modal-body input {
+  width: 62px;
 }
