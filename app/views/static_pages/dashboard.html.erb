@@ -29,9 +29,11 @@
       <div class="jumbo-header"><h4>Watch list</h4></div>
       <div class="stockcontent">
         <%= form_tag(stocks_add_path, method: "get") do %>
-          <%= label_tag(:symbol, "Stock Symbol:") %>
-          <%= text_field_tag(:symbol) %>
-          <button class="btn btn-default watch-btn" type="submit"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Add to watch list</button>
+          <div class="form-group watchlist-form">
+            <%= label_tag(:symbol, "Stock Symbol:") %>
+            <%= text_field_tag :symbol, '', placeholder: 'Enter stock symbol...', class: 'form-control' %>
+            <button class="btn btn-default watch-btn" type="submit"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Add to watch list</button>
+          </div>
         <% end %>
         <br />
         <table class="table table-striped">
