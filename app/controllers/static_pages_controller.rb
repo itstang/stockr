@@ -37,9 +37,15 @@ class StaticPagesController < ApplicationController
     yahoo_client = YahooFinance::Client.new
 
     @stock_data = yahoo_client.quotes([@stock.symbol, "NATU3.SA", "USDJPY=X"], [:ask, :bid, :high, :low, :moving_average_50_day, :moving_average_200_day])
+    @sentiment= sentiment(@stock.symbol)
     @historical_data = yahoo_client.historical_quotes(@stock.symbol, { start_date: Time::now-(24*60*60*360), end_date: Time::now })
-    @twenty_day_exp_MA= moving_avg(20)
-    @fifty_day_exp_MA= moving_avg(50)
+    twenty_day_exp_MA= moving_avg(20)
+    fifty_day_exp_MA= moving_avg(50)
+    @signal = "Buy"
+
+    if(twenty_day_exp_MA < fifty_day_exp_MA && @sentiment )
+      @signal = "Sell"
+    end
 
     @open_history = Array.new
     @close_history = Array.new
@@ -167,25 +173,31 @@ class StaticPagesController < ApplicationController
         num_tweets=0
         total_score=0
         avg_sentiment= 0
-        new_tweets_arr = Array.new
+        tweets_hash = Hash.new
 
         tweets = $twitter.search('$' + stock_symbol + ' -rt',
                                    result_type: 'mixed',
-                                   count: 20).take(3)
+                                   count: 20).take(50)
 
         # remove url from tweets
         tweets.each do |tweet|
           tweet_no_url= tweet.text.dup
           tweet_no_url.gsub!(/(?:f|ht)tps?:\/[^\s]+/, '')
-          new_tweets_arr.push(tweet_no_url)
+          if(tweets_hash.has_key?(tweet_no_url) == false)
+            tweets_hash[tweet_no_url]= tweet.user.verified?
+          end
         end
 
         # remove duplicates
-        new_tweets_arr.uniq!
-        new_tweets_arr.each do |tweet|
+        # new_tweets_arr.uniq!
+        tweets_hash.each do |tweet, verified|
           tweet_sentiment= alchemyapi.sentiment("text", tweet)
           if tweet_sentiment["status"] == 'OK' && tweet_sentiment["docSentiment"]["score"] != nil
-            total_score += tweet_sentiment["docSentiment"]["score"].to_f
+            cur_sentiment= tweet_sentiment["docSentiment"]["score"].to_f
+            if(verified == true)
+              cur_sentiment += cur_sentiment + (cur_sentiment*0.5)
+            end
+            total_score += cur_sentiment
             num_tweets= num_tweets + 1
           end
         end
