@@ -10,17 +10,17 @@
       <div class="jumbo-header price">Price</div>
       <div class="stockcontent">
         <div class="row">
-          <div class="col-md-6">
+          <div class="col-md-8">
             <ul>
-                <li><b>Bidding price: </b><%= @stock_data[0].bid %></li>
-                <li><b>Asking price: </b><%= @stock_data[0].ask %></li>
-                <li><b>High: </b><%= @stock_data[0].high %></li>
-                <li><b>Low: </b><%= @stock_data[0].low %></li>
-                <li><b>Moving Average 50 Day: </b><%= (number_with_precision(@fifty_day_exp_MA, :precision => 2) || 0) %></li>
-                <li><b>Moving Average 20 Day: </b><%= (number_with_precision(@twenty_day_exp_MA, :precision => 2) || 0) %></li>
+                <li><b>Bidding price: </b>$<%= @stock_data[0].bid %></li>
+                <li><b>Asking price: </b>$<%= @stock_data[0].ask %></li>
+                <li><b>High: </b>$<%= @stock_data[0].high %></li>
+                <li><b>Low: </b>$<%= @stock_data[0].low %></li>
+                <li><b>Moving Average 50 Day: </b>$<%= (number_with_precision(@fifty_day_exp_MA, :precision => 2) || 0) %></li>
+                <li><b>Moving Average 20 Day: </b>$<%= (number_with_precision(@twenty_day_exp_MA, :precision => 2) || 0) %></li>
             </ul>
           </div>
-          <div class="col-md-6">
+          <div class="col-md-4">
             <button type="button" class="btn btn-success" data-toggle="modal" data-target="#buyModal">BUY</button>
             <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#sellModal">SELL</button>
           </div>
