@@ -82,24 +82,7 @@
         <div id="canvas-holder">
           <canvas id="pie-canvas" width="300" height="300"> </canvas>
         </div>
-        
-        <%= javascript_tag do %>
-          var randRGB = function () {
-              return "rgba("+ Math.floor(Math.random()*256) + "," + Math.floor(Math.random()*256) + "," + Math.floor(Math.random()*256) + ",";
-          };
-          var prices = <%= raw @stock_prices.to_json %>
-          var symbols = <%= raw @stock_symbols.to_json %>
-          var shares = <%= raw @stock_shares.to_json %>
-          var pieData = [];
-          var i = 0;
-          var base;
-          for (i = 0; i < shares.length; i++) {
-            base = randRGB();
 
-            pieData.push({value: shares[i], color: "" + base + "0.5)", highlight: "" + base + "0.75)", label: symbols[i]})
-          }
-          
-        <% end %>
 
       </td>
 
@@ -109,23 +92,44 @@
           <canvas id="bar-canvas"></canvas>
         </div>
 
+        <%= javascript_tag do %>
+          var randRGB = function () {
+              return "rgba("+ Math.floor(Math.random()*256) + "," + Math.floor(Math.random()*256) + "," + Math.floor(Math.random()*256) + ",";
+          };
 
+          var prices = <%= raw @stock_prices.to_json %>
+          var symbols = <%= raw @stock_symbols.to_json %>
+          var shares = <%= raw @stock_shares.to_json %>
+
+
+          var pieData = [];
+          var i = 0;
+          var base;
+          for (i = 0; i < shares.length; i++) {
+            base = randRGB();
+
+            pieData.push({value: shares[i], color: "" + base + "0.5)", highlight: "" + base + "0.75)", label: symbols[i]})
+          }
+
+
+          var randomScalingFactor = function(){ return Math.round(Math.random()*100)};
+
+          var barChartData = {
+            labels : symbols,
+            datasets : [
+              {
+                fillColor : "rgba(151,187,205,0.5)",
+                strokeColor : "rgba(151,187,205,0.8)",
+                highlightFill : "rgba(151,187,205,0.75)",
+                highlightStroke : "rgba(151,187,205,1)",
+                data : prices
+              }
+            ]
+          }
+          
+        <% end %>
+        
         <script>
-        var randomScalingFactor = function(){ return Math.round(Math.random()*100)};
-        var stockNames = [];
-        var stockPrices = [];
-        var barChartData = {
-          labels : stockNames,
-          datasets : [
-            {
-              fillColor : "rgba(151,187,205,0.5)",
-              strokeColor : "rgba(151,187,205,0.8)",
-              highlightFill : "rgba(151,187,205,0.75)",
-              highlightStroke : "rgba(151,187,205,1)",
-              data : stockPrices
-            }
-          ]
-        }
         window.onload = function(){
           var ctx = document.getElementById("line-canvas").getContext("2d");
           window.myLine = new Chart(ctx).Line(lineChartData, {
