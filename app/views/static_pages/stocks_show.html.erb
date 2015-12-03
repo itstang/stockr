@@ -1,3 +1,5 @@
+<% provide(:title, @stock.company + " : $" + @stock_data[0].bid) %>
+
 <h1><%= @stock.company %> (<%= @stock.symbol %>)</h1>
 
 <div class="container">

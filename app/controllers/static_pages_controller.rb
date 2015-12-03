@@ -32,7 +32,7 @@ class StaticPagesController < ApplicationController
     @data = y_client.quotes(@user_owns.pluck(:symbol), [:name, :day_value_change, :bid, :sentiment])
 
     @user_watches.each_with_index do |stock, index|
-        @data[index].sentiment= sentiment(stock.symbol)
+        # @data[index].sentiment= sentiment(stock.symbol)
         @stock_prices.push(@data[index].bid)
     end
   end
