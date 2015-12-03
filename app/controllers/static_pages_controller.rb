@@ -33,10 +33,12 @@ class StaticPagesController < ApplicationController
     @stock = Stock.find(params[:id])
 
     yahoo_client = YahooFinance::Client.new
-
-    @stock_data = yahoo_client.quotes([@stock.symbol, "NATU3.SA", "USDJPY=X"], [:ask, :bid, :high, :low])
-    
+    @stock_data = yahoo_client.quotes([@stock.symbol, "NATU3.SA", "USDJPY=X"], [:ask, :bid, :high, :low, :moving_average_50_day, :moving_average_200_day])
     @historical_data = yahoo_client.historical_quotes(@stock.symbol, { start_date: Time::now-(24*60*60*360), end_date: Time::now }) 
+    @twenty_day_exp_MA= moving_avg(20)
+    @fifty_day_exp_MA= moving_avg(50)
+
+
     @open_history = Array.new
     @close_history = Array.new
     @high_history = Array.new
@@ -87,6 +89,16 @@ class StaticPagesController < ApplicationController
       end
     end
     puts links_arr.inspect
+  end
+
+  def moving_avg(period)
+    simple_MA = 0
+    @historical_data[0..(period-1)].each do |date_data| 
+      simple_MA += (date_data['close'].to_f)
+    end
+    simple_MA /= period
+
+    return simple_MA
   end
 
   def sentiment(stock_symbol)
