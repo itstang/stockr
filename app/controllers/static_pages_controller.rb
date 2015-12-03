@@ -33,14 +33,14 @@ class StaticPagesController < ApplicationController
     @stock = Stock.find(params[:id])
 
     yahoo_client = YahooFinance::Client.new
-    
-    @historical_data = yahoo_client.historical_quotes(@stock.symbol, { start_date: Time::now-(24*60*60*360), end_date: Time::now }) 
+
+    @historical_data = yahoo_client.historical_quotes(@stock.symbol, { start_date: Time::now-(24*60*60*360), end_date: Time::now })
     @open_history = Array.new
     @close_history = Array.new
     @high_history = Array.new
     @low_history = Array.new
 
-    @historical_data.reverse.each do |date_data| 
+    @historical_data.reverse.each do |date_data|
       date_arr= Array.new
       date_arr.push(date_data['trade_date'])
       date_arr.push(date_data['open'].to_f)
@@ -65,8 +65,10 @@ class StaticPagesController < ApplicationController
     @open_history=@open_history.to_json.html_safe
     @high_history=@high_history.to_json.html_safe
     @low_history=@low_history.to_json.html_safe
-  end
 
+    # Get media links
+    @media_links = scrape_media(Stock.find(params[:id]).symbol)
+  end
 
   def stocks_add
     User_Owns.create(email: current_user.email, symbol: params[:symbol])
@@ -75,16 +77,21 @@ class StaticPagesController < ApplicationController
 
   def scrape_media(stock)
     links_arr = Array.new
+    links_hash = Hash.new
     url = 'http://finance.yahoo.com/q?s='
 
     doc = Nokogiri::HTML(open(url+stock))
     scrape_list = doc.css('#yfi_headlines .bd ul li').children
     scrape_list.each do |link|
       if !link.attributes['href'].nil?
-        links_arr.push(link.attributes['href'].value.gsub(/.*?(?=\*http)\*/, ""))
+        links_hash = {
+          'name' => link.text,
+          'link' => link.attributes['href'].value.gsub(/.*?(?=\*http)\*/, "")
+        }
+        links_arr.append(links_hash)
       end
     end
-    puts links_arr.inspect
+    links_arr
   end
 
   def sentiment(stock_symbol)
@@ -130,5 +137,4 @@ class StaticPagesController < ApplicationController
 
   end
 
-  helper_method :scrape_media
 end

@@ -1,76 +1,58 @@
 <h1><%= @stock.company %> (<%= @stock.symbol %>)</h1>
 
-<div id="container" style="width:100%; height:400px;"></div>
-<div class="row stock">
-    <div class="container">
-        <div class="jumbotron text-center col-md-6">
-            <div class= "jumbo-header chart">
-        		Chart
-        	</div>
-        	<div class= "jumbotron-content">
-
-        	</div>
-
-        </div>
-
-        <div class="jumbotron text-center col-md-6">
-            <div class= "jumbo-header price">
-        		Price
-        	</div>
-
-        	<div class= "jumbotron-content">
-
-        	</div>
-
-        </div>
+<div class="container">
+  <div class="row">
+    <div class="col-md-6">
+      <div class="jumbo-header chart">Chart</div>
+      <div id="stock-chart" class="stockcontent"></div>
     </div>
-</div>
-
-<div class="row stock">
-    <div class="container">
-        <div class="jumbotron text-center col-md-6">
-        <div class= "jumbo-header history">
-        	History of Stock
-        </div>
-        <div class= "jumbotron-content">
-			  <table class="table table-hover">
-			    <thead>
-			      <tr>
-			        <th>Date</th>
-			        <th>Open</th>
-			        <th>High</th>
-			        <th>Low</th>
-			        <th>Close</th>
-			      </tr>
-			    </thead>
-			    <tbody>
-			      	<% @historical_data[0..4].each do |date_data| %>
-			      		<tr>
-			  			<td><%= date_data['trade_date'] %></td>
-			  			<td>$<%= date_data['open'] %></td>
-			  			<td>$<%= date_data['high'] %></td>
-			  			<td>$<%= date_data['low'] %></td>
-			  			<td>$<%= date_data['close'] %></td>
-			  			</tr>
-					<% end %>
-
-			    </tbody>
-			  </table>
-	       </div>
-        </div>
-
-
-        <div class="jumbotron text-center col-md-6">
-            <div class= "jumbo-header news">
-        		News
-        	</div>
-
-        	<div class= "jumbotron-content">
-
-        	</div>
-
-        </div>
+    <div class="col-md-6">
+      <div class="jumbo-header price">Price</div>
+      <div class="stockcontent">
+        Price Info
+      </div>
     </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-6">
+      <div class="jumbo-header history">History</div>
+      <div class="stockcontent">
+        <table class="table table-hover">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Open</th>
+              <th>High</th>
+              <th>Low</th>
+              <th>Close</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @historical_data[0..4].each do |date_data| %>
+              <tr>
+                <td><%= date_data['trade_date'] %></td>
+                <td>$<%= date_data['open'] %></td>
+                <td>$<%= date_data['high'] %></td>
+                <td>$<%= date_data['low'] %></td>
+                <td>$<%= date_data['close'] %></td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="jumbo-header news">News</div>
+      <div class="stockcontent">
+        <ul class="media-links">
+          <% @media_links.each do |link| %>
+            <li><a href="<%= link['link'] %>"><%= link['name']  %></a></li>
+          <% end %>
+        <ul>
+      </div>
+    </div>
+  </div>
 </div>
 
 <%= javascript_tag do %>
@@ -81,7 +63,7 @@ console.log(<%= @open_history %>);
     $.getJSON(url, function (data) {
         // Create the chart
         console.log(data);
-        $('#container').highcharts('StockChart', {
+        $('#stock-chart').highcharts('StockChart', {
 
         	xAxis: {
             type: 'datetime',
@@ -140,5 +122,3 @@ console.log(<%= @open_history %>);
 
 });
 <% end %>
-
-<%= link_to 'Scrape', scrape_media(@stock.symbol) %>

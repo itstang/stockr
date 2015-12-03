@@ -244,3 +244,20 @@ input {
   padding-left: 60px;
   padding-right: 60px;
 }
+
+.stockcontent {
+  border-left: 1px solid $gray-lighter;
+  border-right: 1px solid $gray-lighter;
+  border-bottom: 1px solid $gray-lighter;
+  margin-bottom: 30px;
+  padding: 12px;
+
+  .media-links {
+    list-style-type: none;
+    padding: 0;
+
+    li {
+      margin-bottom: 12px;
+    }
+  }
+}
