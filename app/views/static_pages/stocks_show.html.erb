@@ -22,12 +22,12 @@
               <li><b>High: </b>$<%= @stock_data[0].high %></li>
               <li><b>Low: </b>$<%= @stock_data[0].low %></li>
               <li><b>Analysis: </b>
-                <% if @signal  == "Sell" %>
-                    <b style="color:red;">Look to <%= @signal %></b>
-                <% elsif @signal  == "Buy" %>
-                    <b style="color:green;">Look to <%= @signal %></b>
+                <% if @sentiment  == "Sell" %>
+                    <b style="color:red;">Look to <%= @sentiment %></b>
+                <% elsif @sentiment  == "Buy" %>
+                    <b style="color:green;">Look to <%= @sentiment %></b>
                 <% else %>
-                    <b style="color:orange;">Look to <%= @signal %></b>
+                    <b style="color:orange;">Look to <%= @sentiment %></b>
                 <% end %>
               </li>
             </ul>

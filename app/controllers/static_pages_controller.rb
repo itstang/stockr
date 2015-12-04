@@ -48,20 +48,14 @@ class StaticPagesController < ApplicationController
     @stock = Stock.find(params[:id])
     @user_owns = User_Owns.new
 
+    # Get media links
+    @media_links = scrape_media(Stock.find(params[:id]).symbol)
+
     yahoo_client = YahooFinance::Client.new
 
     @stock_data = yahoo_client.quotes([@stock.symbol, "NATU3.SA", "USDJPY=X"], [:ask, :bid, :high, :low, :moving_average_50_day, :moving_average_200_day])
-    #@sentiment= sentiment(@stock.symbol)
     @historical_data = yahoo_client.historical_quotes(@stock.symbol, { start_date: Time::now-(24*60*60*360), end_date: Time::now })
-    twenty_day_exp_MA= moving_avg(20)
-    fifty_day_exp_MA= moving_avg(50)
-    @signal = "Hold"
-
-    # if(twenty_day_exp_MA < fifty_day_exp_MA && @sentiment < 0)
-    #   @signal = "Sell"
-    # elsif(twenty_day_exp_MA > fifty_day_exp_MA && @sentiment > 0.25)
-    #   @signal = "Buy"
-    # end
+    @sentiment = sentiment(@stock.symbol, @media_links, @historical_data)
 
     @open_history = Array.new
     @close_history = Array.new
@@ -93,9 +87,6 @@ class StaticPagesController < ApplicationController
     @open_history=@open_history.to_json.html_safe
     @high_history=@high_history.to_json.html_safe
     @low_history=@low_history.to_json.html_safe
-
-    # Get media links
-    @media_links = scrape_media(Stock.find(params[:id]).symbol)
   end
 
   def stocks_add
@@ -185,9 +176,9 @@ class StaticPagesController < ApplicationController
     links_arr
   end
 
-  def moving_avg(period)
+  def moving_avg(period, historical_data)
     simple_MA = 0
-    @historical_data[0..(period-1)].each do |date_data|
+    historical_data[0..(period-1)].each do |date_data|
       simple_MA += (date_data['close'].to_f)
     end
     simple_MA /= period
@@ -195,45 +186,80 @@ class StaticPagesController < ApplicationController
     return simple_MA
   end
 
-  def sentiment(stock_symbol)
+  def sentiment(stock_symbol, media_links, historical_data)
     alchemyapi = AlchemyAPI.new()
-        num_tweets=0
-        total_score=0
-        avg_sentiment= 0
-        tweets_hash = Hash.new
+    num_tweets = 0
+    num_media = 0
+    total_score = 0
+    media_total = 0
+    avg_sentiment = 0
+    tweet_sentiment = 0
+    tweets_hash = Hash.new
 
-        tweets = $twitter.search('$' + stock_symbol + ' -rt',
-                                   result_type: 'mixed',
-                                   count: 20).take(50)
+    tweets = $twitter.search('$' + stock_symbol + ' -rt',
+                               result_type: 'mixed',
+                               count: 20).take(50)
 
-        # remove url from tweets
-        tweets.each do |tweet|
-          tweet_no_url= tweet.text.dup
-          tweet_no_url.gsub!(/(?:f|ht)tps?:\/[^\s]+/, '')
-          if(tweets_hash.has_key?(tweet_no_url) == false)
-            tweets_hash[tweet_no_url]= tweet.user.verified?
-          end
-        end
+    # remove url from tweets
+    tweets.each do |tweet|
+      tweet_no_url= tweet.text.dup
+      tweet_no_url.gsub!(/(?:f|ht)tps?:\/[^\s]+/, '')
+      if(tweets_hash.has_key?(tweet_no_url) == false)
+        tweets_hash[tweet_no_url]= tweet.user.verified?
+      end
+    end
 
-        # remove duplicates
-        # new_tweets_arr.uniq!
-        tweets_hash.each do |tweet, verified|
-          tweet_sentiment= alchemyapi.sentiment("text", tweet)
-          if tweet_sentiment["status"] == 'OK' && tweet_sentiment["docSentiment"]["score"] != nil
-            cur_sentiment= tweet_sentiment["docSentiment"]["score"].to_f
-            if(verified == true)
-              cur_sentiment += (cur_sentiment*0.5)
-            end
-            total_score += cur_sentiment
-            num_tweets= num_tweets + 1
-          end
+    # remove duplicates
+    # Get tweet sentiment
+    tweets_hash.each do |tweet, verified|
+      tweet_sentiment = alchemyapi.sentiment("text", tweet)
+      if tweet_sentiment["status"] == 'OK' && tweet_sentiment["docSentiment"]["score"] != nil
+        cur_sentiment = tweet_sentiment["docSentiment"]["score"].to_f
+        if(verified == true)
+          #Double score if a verified Tweeter
+          cur_sentiment += cur_sentiment
         end
-        if(num_tweets == 0)
-          avg_sentiment = 0
-        else
-          avg_sentiment = total_score/num_tweets
-        end
-        return avg_sentiment
+        total_score += cur_sentiment
+        num_tweets= num_tweets + 1
+      end
+    end
+
+    # Get media sentiment
+    media_links[0..5].each do |media|
+      media_sentiment = alchemyapi.sentiment('url', media['link'])
+      if media_sentiment['status'] == 'OK' && media_sentiment['docSentiment']['score'] != nil
+        cur_sentiment = media_sentiment['docSentiment']['score'].to_f
+
+        media_total += cur_sentiment
+        num_media += 1
+      end
+    end
+
+    # Get average tweet sentiment score
+    num_tweets == 0 ? tweet_sentiment = 0 : tweet_sentiment = total_score/num_tweets
+    # Get average media sentiment score
+    num_media == 0 ? media_sentiment = 0 : media_sentiment = media_total/num_media
+
+    avg_sentiment = tweet_sentiment * 0.4 + media_sentiment * 0.6
+
+    twenty_day_exp_MA = moving_avg(20, historical_data)
+    fifty_day_exp_MA = moving_avg(50, historical_data)
+
+    puts tweet_sentiment
+    puts media_sentiment
+    puts avg_sentiment
+
+    if twenty_day_exp_MA < fifty_day_exp_MA && avg_sentiment > 0.25
+      return 'Buy'
+    elsif twenty_day_exp_MA < fifty_day_exp_MA && avg_sentiment < 0.1
+      return 'Sell'
+    elsif twenty_day_exp_MA > fifty_day_exp_MA && avg_sentiment > 0.25
+      return 'Buy'
+    elsif twenty_day_exp_MA > fifty_day_exp_MA && avg_sentiment < 0.1
+      return 'Sell'
+    else
+      return 'Hold'
+    end
   end
 
   def history
