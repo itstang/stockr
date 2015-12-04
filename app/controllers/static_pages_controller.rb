@@ -19,8 +19,8 @@ class StaticPagesController < ApplicationController
     y_client = YahooFinance::Client.new
     @user_watches = User_Watches.joins('LEFT OUTER JOIN stocks ON stocks.symbol = user_watches.symbol').where(email: current_user.email)
     @user_owns = User_Owns.where(email: current_user.email)
-    @data_watches = y_client.quotes(@user_watches.pluck(:symbol), [:name, :day_value_change, :bid, :sentiment])
-    @data_owns = y_client.quotes(@user_owns.pluck(:symbol), [:name, :day_value_change, :bid, :sentiment])
+    @data_watches = y_client.quotes(@user_watches.pluck(:symbol), [:name, :bid, :sentiment])
+    @data_owns = y_client.quotes(@user_owns.pluck(:symbol), [:name, :bid, :sentiment])
 
     @stock_symbols = []
     @stock_shares = []
@@ -99,8 +99,10 @@ class StaticPagesController < ApplicationController
   end
 
   def stocks_add
-    if !Stock.find_by(symbol: params[:symbol]).nil?
-      User_Watches.create(email: current_user.email, symbol: params[:symbol])
+    @symbol = params[:symbol]
+    @stock = Stock.find_by(symbol: params[:symbol].upcase)
+    if !Stock.find_by(symbol: params[:symbol].upcase).nil?
+      User_Watches.create(email: current_user.email, symbol: params[:symbol].upcase)
     end
     redirect_to dashboard_url
   end

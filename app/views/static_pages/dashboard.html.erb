@@ -41,7 +41,6 @@
             <tr>
               <th>Symbol</th>
               <th>Company Name</th>
-              <th>Asking Price</th>
               <th>Bidding Price</th>
               <th></th>
             </tr>
@@ -51,7 +50,6 @@
               <tr>
                 <td><%= link_to stock.symbol.upcase, stock_path(stock.id)  %></td>
                 <td><%= @data_watches[index].name %></td>
-                <td>$<%= @data_watches[index].day_value_change %></td>
                 <td>$<%= @data_watches[index].bid %></td>
                 <td>
                   <%= form_for :user_watches, url: stocks_remove_path do |f| %>
