@@ -31,7 +31,7 @@ User.create!(name:  "Admin User",
              admin: true,
              balance: 10000.00)
 
-99.times do |n|
+98.times do |n|
   name  = Faker::Name.name
   email = "example-#{n+1}@railstutorial.org"
   password = "password"
