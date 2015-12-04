@@ -54,7 +54,7 @@ class StaticPagesController < ApplicationController
 
     @stock_data = yahoo_client.quotes([@stock.symbol, "NATU3.SA", "USDJPY=X"], [:ask, :bid, :high, :low, :moving_average_50_day, :moving_average_200_day])
     @historical_data = yahoo_client.historical_quotes(@stock.symbol, { start_date: Time::now-(24*60*60*360), end_date: Time::now })
-    @sentiment = sentiment(@stock.symbol, @media_links, @historical_data)
+    @sentiment = 'Sell'
 
     @open_history = Array.new
     @close_history = Array.new
