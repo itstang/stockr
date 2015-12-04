@@ -1,5 +1,4 @@
 require 'rubygems'
-require 'twitter'
 
 $twitter = Twitter::REST::Client.new do |config|
   config.consumer_key = '4zAE4k6AqkX5csufyOd7spLYa'
