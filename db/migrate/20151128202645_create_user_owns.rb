@@ -4,6 +4,7 @@ class CreateUserOwns < ActiveRecord::Migration
       t.string :email
       t.string :symbol
       t.integer :shares
+      t.integer :stock_id
     end
   end
 end

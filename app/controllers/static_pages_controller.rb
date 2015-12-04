@@ -19,8 +19,8 @@ class StaticPagesController < ApplicationController
     y_client = YahooFinance::Client.new
     @user_watches = User_Watches.joins('LEFT OUTER JOIN stocks ON stocks.symbol = user_watches.symbol').where(email: current_user.email)
     @user_owns = User_Owns.where(email: current_user.email)
-    @data_watches = y_client.quotes(@user_watches.pluck(:symbol), [:name, :day_value_change, :bid, :sentiment])
-    @data_owns = y_client.quotes(@user_owns.pluck(:symbol), [:name, :day_value_change, :bid, :sentiment])
+    @data_watches = y_client.quotes(@user_watches.pluck(:symbol), [:name, :bid, :sentiment])
+    @data_owns = y_client.quotes(@user_owns.pluck(:symbol), [:name, :bid, :sentiment])
 
     @stock_symbols = []
     @stock_shares = []
@@ -31,7 +31,7 @@ class StaticPagesController < ApplicationController
       @stock_symbols.push(stock.symbol)
       @stock_shares.push(stock.shares)
       @stock_prices.push(@data_owns[index].bid)
-      @stock_ids.push(stock.id)
+      @stock_ids.push(stock.stock_id)
     end
 
 
@@ -90,8 +90,10 @@ class StaticPagesController < ApplicationController
   end
 
   def stocks_add
-    if !Stock.find_by(symbol: params[:symbol]).nil?
-      User_Watches.create(email: current_user.email, symbol: params[:symbol])
+    @symbol = params[:symbol]
+    @stock = Stock.find_by(symbol: params[:symbol].upcase)
+    if !Stock.find_by(symbol: params[:symbol].upcase).nil?
+      User_Watches.create(email: current_user.email, symbol: params[:symbol].upcase)
     end
     redirect_to dashboard_url
   end
@@ -105,6 +107,7 @@ class StaticPagesController < ApplicationController
   def stocks_buy
     num_shares = params[:user_owns][:shares].to_i
     total_price = params[:user_owns][:price].to_f * num_shares
+    stock_id = Stock.find_by(symbol: params[:user_owns][:symbol]).id
 
     user = User.find_by(email: current_user.email)
     user_owns_symbol = User_Owns.where(email: current_user.email, symbol:params[:user_owns][:symbol])
@@ -112,23 +115,24 @@ class StaticPagesController < ApplicationController
       #do nothing
     else
       if user_owns_symbol.empty?
-        User_Owns.create(email: current_user.email, symbol: params[:user_owns][:symbol], shares: num_shares)
+        User_Owns.create(email: current_user.email, symbol: params[:user_owns][:symbol], shares: num_shares, stock_id: stock_id)
       else
         user_owns = User_Owns.where(:email => current_user.email, :symbol => params[:user_owns][:symbol])
         user_owns[0].shares += num_shares
         user_owns[0].save
       end
 
-      Transaction.create(transaction_type: "buy", email: current_user.email, symbol: params[:user_owns][:symbol], shares: num_shares, amount: total_price)
+      Transaction.create(transaction_type: "buy", email: current_user.email, symbol: params[:user_owns][:symbol], shares: num_shares, amount: total_price, stock_id: stock_id)
       user.balance -= total_price
       user.save
     end
-    flash[:success] = "You bought " + num_shares.to_s + " shares of " + params[:user_owns][:symbol].to_s + " for $" + total_price.to_s + "!"
+    flash[:success] = "You bought " + num_shares.to_s + " share(s) of " + params[:user_owns][:symbol].to_s + " for $" + total_price.round(2).to_s + "!"
     redirect_to dashboard_url
   end
 
   def stocks_sell
     num_shares = params[:user_owns][:shares].to_i
+    stock_id = Stock.find_by(symbol: params[:user_owns][:symbol]).id
 
     user_owns_symbol = User_Owns.find_by(email: current_user.email, symbol: params[:user_owns][:symbol])
     if user_owns_symbol.nil?
@@ -146,7 +150,7 @@ class StaticPagesController < ApplicationController
       end
 
       total_price = params[:user_owns][:price].to_f * num_shares
-      Transaction.create(transaction_type: "sell", email: current_user.email, symbol: params[:user_owns][:symbol], shares: num_shares, amount: total_price)
+      Transaction.create(transaction_type: "sell", email: current_user.email, symbol: params[:user_owns][:symbol], shares: num_shares, amount: total_price, stock_id: stock_id)
 
       user = User.find_by(email: current_user.email)
       user.balance += total_price

@@ -11,7 +11,6 @@
 Stock.create!([
   {symbol: "AAPL", company: "Apple, Inc."},
   {symbol: "FB", company: "Facebook, Inc."},
-  {symbol: "TWTR", company: "Twitter, Inc."},
   {symbol: "GOOG", company: "Google, Inc."},
   {symbol: "NFLX", company: "Netflix"},
 ])

@@ -16,7 +16,7 @@ class UsersController < ApplicationController
     @user = User.new(user_params, balance: 10000)
     if @user.save
       log_in @user
-      flash[:success] = "Welcome to the Stockr!"
+      flash[:success] = "Welcome to Stockr " + @user.name + "!"
       redirect_to @user
     else
       render 'new'
@@ -38,7 +38,7 @@ class UsersController < ApplicationController
   end
 
   def index
-      @users = User.paginate(page: params[:page]).order(balance: :desc)
+      @users = User.all.order(balance: :desc)
   end
 
   def destroy

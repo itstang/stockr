@@ -1,3 +1,50 @@
 // Place all the styles related to the Users controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
+
+$balance: #5cb85c;
+$med-balance: #f0ad4e;
+$low-balance: #C95037;
+
+.users {
+  padding-left: 12px;
+
+  li {
+
+    &.current_user {
+      background-color: rgba(92, 184, 92, 0.2);
+
+      .rank { font-weight: 300; }
+    }
+
+    .gravatar {
+      height: 50px;
+    }
+
+    .rank {
+      display: inline-block;
+      font-size: 1.6em;
+      font-weight: 100;
+      line-height: 2em;
+      width: 50px;
+      padding-left: 8px;
+    }
+  }
+
+  .btn {
+    margin-top: 7px;
+  }
+
+  .user-block {
+    width: 50%;
+
+    .user-balance {
+      color: $balance;
+      font-size: 1.3em;
+      font-weight: 100;
+    }
+
+    .medium { color: $med-balance; }
+    .low { color: #C95037; }
+  }
+}

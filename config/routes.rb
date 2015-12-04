@@ -6,7 +6,7 @@ Rails.application.routes.draw do
   get    'about'   => 'static_pages#about'
   get    'dashboard' => 'static_pages#dashboard'
   get    'stocks'  => 'static_pages#stocks'
-  post   'stocks/add' => 'static_pages#stocks_add'
+  get   'stocks/add' => 'static_pages#stocks_add'
   post   'stocks/remove' => 'static_pages#stocks_remove'
   # get    'stocks/media' => 'static_pages#scrape_media'
   get    'stocks/:id' => 'static_pages#stocks_show'
