@@ -47,7 +47,7 @@
           <tbody>
             <% @user_watches.each_with_index do |stock, index| %>
               <tr>
-                <td><%= link_to stock.symbol.upcase, stock_path(stock.id)  %></td>
+                <td><%= link_to stock.symbol.upcase, stock_path(stock.stock_id)  %></td>
                 <td><%= @data_watches[index].name %></td>
                 <td>$<%= @data_watches[index].bid %></td>
                 <td class="watchlist-remove">

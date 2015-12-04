@@ -79,8 +79,9 @@ ActiveRecord::Schema.define(version: 20151128214509) do
   end
 
   create_table "user_watches", force: :cascade do |t|
-    t.string "email"
-    t.string "symbol"
+    t.string  "email"
+    t.string  "symbol"
+    t.integer "stock_id"
   end
 
   create_table "users", force: :cascade do |t|

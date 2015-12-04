@@ -92,7 +92,7 @@ class StaticPagesController < ApplicationController
     @symbol = params[:symbol]
     @stock = Stock.find_by(symbol: params[:symbol].upcase)
     if !Stock.find_by(symbol: params[:symbol].upcase).nil?
-      User_Watches.create(email: current_user.email, symbol: params[:symbol].upcase)
+      User_Watches.create(email: current_user.email, symbol: params[:symbol].upcase, stock_id: @stock.id)
     end
     redirect_to dashboard_url
   end
