@@ -114,6 +114,7 @@ class StaticPagesController < ApplicationController
   def stocks_buy
     num_shares = params[:user_owns][:shares].to_i
     total_price = params[:user_owns][:price].to_f * num_shares
+    stock_id = Stock.find_by(symbol: params[:user_owns][:symbol]).id
 
     user = User.find_by(email: current_user.email)
     user_owns_symbol = User_Owns.where(email: current_user.email, symbol:params[:user_owns][:symbol])
@@ -121,7 +122,7 @@ class StaticPagesController < ApplicationController
       #do nothing
     else
       if user_owns_symbol.empty?
-        User_Owns.create(email: current_user.email, symbol: params[:user_owns][:symbol], shares: num_shares)
+        User_Owns.create(email: current_user.email, symbol: params[:user_owns][:symbol], shares: num_shares, stock_id: stock_id)
       else
         user_owns = User_Owns.where(:email => current_user.email, :symbol => params[:user_owns][:symbol])
         user_owns[0].shares += num_shares
@@ -132,7 +133,7 @@ class StaticPagesController < ApplicationController
       user.balance -= total_price
       user.save
     end
-    flash[:success] = "You bought " + num_shares.to_s + " shares of " + params[:user_owns][:symbol].to_s + " for $" + total_price.to_s + "!"
+    flash[:success] = "You bought " + num_shares.to_s + " share(s) of " + params[:user_owns][:symbol].to_s + " for $" + total_price.round(2).to_s + "!"
     redirect_to dashboard_url
   end
 
