@@ -1,4 +1,3 @@
-require_relative 'twitter.rb'
 require "#{Rails.root}/config/initializers/alchemyapi.rb"
 require 'nokogiri'
 require 'open-uri'
@@ -199,6 +198,13 @@ class StaticPagesController < ApplicationController
     avg_sentiment = 0
     tweet_sentiment = 0
     tweets_hash = Hash.new
+
+    $twitter = Twitter::REST::Client.new do |config|
+      config.consumer_key = ENV['TWTR_CONSUMER_KEY']
+      config.consumer_secret = ENV['TWTR_CONSUMER_SECRET']
+      config.access_token = ENV['TWTR_ACCESS_TOKEN']
+      config.access_token_secret = ENV['TWTR_ACCESS_TOKEN_SECRET']
+    end
 
     tweets = $twitter.search('$' + stock_symbol + ' -rt',
                                result_type: 'mixed',
