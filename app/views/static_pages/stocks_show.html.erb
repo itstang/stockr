@@ -1,137 +1,139 @@
-<% provide(:title, @stock.company + " : $" + @stock_data[0].bid) %>
-
-<h1><%= @stock.company %> (<%= @stock.symbol %>)</h1>
-
 <div class="container">
-  <div class="row">
-    <div class="col-md-12">
-      <div class="jumbo-header chart"><h4>Histogram</h4></div>
-      <div id="stock-chart" class="stockcontent"></div>
-    </div>
-  </div>
+  <% provide(:title, @stock.company + " : $" + @stock_data[0].bid) %>
 
-  <div class="row">
-    <div class="col-md-12">
-      <div class="jumbo-header price"><h4>Price</h4></div>
-      <div class="stockcontent">
-        <div class="row">
-          <div class="col-md-8">
-            <ul class="price-info">
-              <li><strong>Bidding price: </strong>$<%= @stock_data[0].bid %></li>
-              <li><b>Asking price: </b>$<%= @stock_data[0].ask %></li>
-              <li><b>High: </b>$<%= @stock_data[0].high %></li>
-              <li><b>Low: </b>$<%= @stock_data[0].low %></li>
-              <li><b>Analysis: </b>
-                <% if @sentiment  == "Sell" %>
-                    <b style="color:red;">Look to <%= @sentiment %></b>
-                <% elsif @sentiment  == "Buy" %>
-                    <b style="color:green;">Look to <%= @sentiment %></b>
-                <% else %>
-                    <b style="color:orange;">Look to <%= @sentiment %></b>
-                <% end %>
-              </li>
-            </ul>
-            <button type="button" class="btn btn-success" data-toggle="modal" data-target="#buyModal">BUY</button>
-            <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#sellModal">SELL</button>
+  <h1><%= @stock.company %> (<%= @stock.symbol %>)</h1>
+
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="jumbo-header chart"><h4>Histogram</h4></div>
+        <div id="stock-chart" class="stockcontent"></div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-12">
+        <div class="jumbo-header price"><h4>Price</h4></div>
+        <div class="stockcontent">
+          <div class="row">
+            <div class="col-md-8">
+              <ul class="price-info">
+                <li><strong>Bidding price: </strong>$<%= @stock_data[0].bid %></li>
+                <li><b>Asking price: </b>$<%= @stock_data[0].ask %></li>
+                <li><b>High: </b>$<%= @stock_data[0].high %></li>
+                <li><b>Low: </b>$<%= @stock_data[0].low %></li>
+                <li><b>Analysis: </b>
+                  <% if @sentiment  == "Sell" %>
+                      <b style="color:red;">Look to <%= @sentiment %></b>
+                  <% elsif @sentiment  == "Buy" %>
+                      <b style="color:green;">Look to <%= @sentiment %></b>
+                  <% else %>
+                      <b style="color:orange;">Look to <%= @sentiment %></b>
+                  <% end %>
+                </li>
+              </ul>
+              <button type="button" class="btn btn-success" data-toggle="modal" data-target="#buyModal">BUY</button>
+              <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#sellModal">SELL</button>
+            </div>
           </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-6">
+        <div class="jumbo-header history"><h4>History</h4></div>
+        <div class="stockcontent">
+          <table class="table table-hover">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Open</th>
+                <th>High</th>
+                <th>Low</th>
+                <th>Close</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% @historical_data[0..4].each do |date_data| %>
+                <tr>
+                  <td><%= date_data['trade_date'] %></td>
+                  <td>$<%= (number_with_precision(date_data['open'], :precision => 2) || 0) %></td>
+    			  			<td>$<%= (number_with_precision(date_data['high'], :precision => 2) || 0) %></td>
+    			  			<td>$<%=(number_with_precision(date_data['low'], :precision => 2) || 0) %></td>
+    			  			<td>$<%= (number_with_precision(date_data['close'], :precision => 2) || 0) %></td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="jumbo-header news"><h4><%= @stock.company %> in the News</h4></div>
+        <div class="stockcontent">
+          <ol class="media-links">
+            <% @media_links.each do |link| %>
+              <li><a href="<%= link['link'] %>"><%= link['name']  %></a></li>
+            <% end %>
+          <ul>
         </div>
       </div>
     </div>
   </div>
 
-  <div class="row">
-    <div class="col-md-6">
-      <div class="jumbo-header history"><h4>History</h4></div>
-      <div class="stockcontent">
-        <table class="table table-hover">
-          <thead>
-            <tr>
-              <th>Date</th>
-              <th>Open</th>
-              <th>High</th>
-              <th>Low</th>
-              <th>Close</th>
-            </tr>
-          </thead>
-          <tbody>
-            <% @historical_data[0..4].each do |date_data| %>
-              <tr>
-                <td><%= date_data['trade_date'] %></td>
-                <td>$<%= (number_with_precision(date_data['open'], :precision => 2) || 0) %></td>
-  			  			<td>$<%= (number_with_precision(date_data['high'], :precision => 2) || 0) %></td>
-  			  			<td>$<%=(number_with_precision(date_data['low'], :precision => 2) || 0) %></td>
-  			  			<td>$<%= (number_with_precision(date_data['close'], :precision => 2) || 0) %></td>
-              </tr>
-            <% end %>
-          </tbody>
-        </table>
-      </div>
-    </div>
-    <div class="col-md-6">
-      <div class="jumbo-header news"><h4><%= @stock.company %> in the News</h4></div>
-      <div class="stockcontent">
-        <ol class="media-links">
-          <% @media_links.each do |link| %>
-            <li><a href="<%= link['link'] %>"><%= link['name']  %></a></li>
+  <!-- Buy Modal -->
+  <div id="buyModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Buy Stock</h4>
+        </div>
+        <div class="modal-body">
+          <p><b>Bidding price: </b><%= @stock_data[0].bid %></p>
+          <%= form_for :user_owns, url: stocks_buy_path do |f| %>
+            <b>Number of shares:</b>
+            <%= f.number_field(:shares) %>
+            <%= f.hidden_field :symbol, :value => @stock.symbol %>
+            <%= f.hidden_field :price, :value => @stock_data[0].bid %>
+            <br><br>
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          <%= f.submit "Buy", :class => "btn btn-success" %>
           <% end %>
-        <ul>
+
+        </div>
       </div>
+
     </div>
   </div>
-</div>
 
-<!-- Buy Modal -->
-<div id="buyModal" class="modal fade" role="dialog">
-  <div class="modal-dialog">
+  <!-- Sell Modal -->
+  <div id="sellModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
 
-    <!-- Modal content-->
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title">Buy Stock</h4>
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Sell Stock</h4>
+        </div>
+        <div class="modal-body">
+          <p><b>Bidding price: </b><%= @stock_data[0].bid %></p>
+          <%= form_for :user_owns, url: stocks_sell_path do |f| %>
+            <b>Number of shares:</b>
+            <%= f.number_field(:shares) %>
+            <%= f.hidden_field :symbol, :value => @stock.symbol %>
+            <%= f.hidden_field :price, :value => @stock_data[0].bid %>
+            <br><br>
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          <%= f.submit "Sell", :class => "btn btn-danger" %>
+          <% end %>
+        </div>
       </div>
-      <div class="modal-body">
-        <p><b>Bidding price: </b><%= @stock_data[0].bid %></p>
-        <%= form_for :user_owns, url: stocks_buy_path do |f| %>
-          <b>Number of shares:</b>
-          <%= f.number_field(:shares) %>
-          <%= f.hidden_field :symbol, :value => @stock.symbol %>
-          <%= f.hidden_field :price, :value => @stock_data[0].bid %>
-          <br><br>
-          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        <%= f.submit "Buy", :class => "btn btn-success" %>
-        <% end %>
 
-      </div>
     </div>
-
-  </div>
-</div>
-
-<!-- Sell Modal -->
-<div id="sellModal" class="modal fade" role="dialog">
-  <div class="modal-dialog">
-
-    <!-- Modal content-->
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title">Sell Stock</h4>
-      </div>
-      <div class="modal-body">
-        <p><b>Bidding price: </b><%= @stock_data[0].bid %></p>
-        <%= form_for :user_owns, url: stocks_sell_path do |f| %>
-          <b>Number of shares:</b>
-          <%= f.number_field(:shares) %>
-          <%= f.hidden_field :symbol, :value => @stock.symbol %>
-          <%= f.hidden_field :price, :value => @stock_data[0].bid %>
-          <br><br>
-          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        <%= f.submit "Sell", :class => "btn btn-danger" %>
-        <% end %>
-      </div>
-    </div>
-
   </div>
 </div>
 

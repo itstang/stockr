@@ -1,3 +1,44 @@
 // Place all the styles related to the StaticPages controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
+
+.hero {
+  background-image: radial-gradient(circle at 0 0, rgba(15, 82, 119, 0.8), rgba(92, 184, 92, 0.75)), url(image-path('hero.jpg')),;
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: cover;
+  height: 60vh;
+  width: 100%;
+  margin-top: -10px;
+
+  .welcome {
+    color: $white;
+    font-size: 2em;
+    position: relative;
+    top: 12%;
+
+    h1 {
+      letter-spacing: normal;
+      font-weight: 100;
+    }
+
+    .btn {
+      font-weight: 200;
+    }
+  }
+}
+
+.device {
+  height: 0;
+
+  .macbook {
+    background-image: url(image-path('macbook.png'));
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: bottom center;
+    perspective:1000px;
+    height: 635px;
+    position: relative;
+    top: -300px;
+  }
+}

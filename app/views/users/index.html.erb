@@ -1,28 +1,30 @@
-<% provide(:title, 'User Rankings') %>
+<div class="container">
+  <% provide(:title, 'User Rankings') %>
 
-<h1>User Rankings</h1>
-<%= yield %>
+  <h1>User Rankings</h1>
+  <%= yield %>
 
-<div class="row">
-  <ul class="users">
-      <% @users.each_with_index do |user, index| %>
-          <li <%= current_user?(user)? 'class=current_user' : '' %>>
-            <div class="user-block pull-left">
-              <span class="rank pull-left"><%= index+1 %>.</span>
-              <div class="user-info">
-                <%= gravatar_for user %>
-                <%= link_to user.name, user %>
+  <div class="row">
+    <ul class="users">
+        <% @users.each_with_index do |user, index| %>
+            <li <%= current_user?(user)? 'class=current_user' : '' %>>
+              <div class="user-block pull-left">
+                <span class="rank pull-left"><%= index+1 %>.</span>
+                <div class="user-info">
+                  <%= gravatar_for user %>
+                  <%= link_to user.name, user %>
+                </div>
+
+                <div class="<%= user.balance < 8000 && user.balance > 5000? 'user-balance medium' : 'user-balance' %><%= user.balance < 5000 ? ' low' : '' %>">
+                  <%= number_to_currency(user.balance) %>
+                </div>
               </div>
 
-              <div class="<%= user.balance < 8000 && user.balance > 5000? 'user-balance medium' : 'user-balance' %><%= user.balance < 5000 ? ' low' : '' %>">
-                <%= number_to_currency(user.balance) %>
-              </div>
-            </div>
-
-            <% if current_user.admin? && !current_user?(user) %>
-              <%= link_to "Delete", user, method: :delete, data: {confirm: "You sure?"}, class: "btn btn-danger pull-right" %>
-            <% end %>
-          </li>
-      <% end %>
-  </ul>
+              <% if current_user.admin? && !current_user?(user) %>
+                <%= link_to "Delete", user, method: :delete, data: {confirm: "You sure?"}, class: "btn btn-danger pull-right" %>
+              <% end %>
+            </li>
+        <% end %>
+    </ul>
+  </div>
 </div>

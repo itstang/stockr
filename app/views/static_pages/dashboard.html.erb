@@ -41,8 +41,7 @@
             <tr>
               <th>Symbol</th>
               <th>Company Name</th>
-              <th>Bidding Price</th>
-              <th></th>
+              <th colspan="2">Bidding Price</th>
             </tr>
           </thead>
           <tbody>
@@ -51,10 +50,10 @@
                 <td><%= link_to stock.symbol.upcase, stock_path(stock.id)  %></td>
                 <td><%= @data_watches[index].name %></td>
                 <td>$<%= @data_watches[index].bid %></td>
-                <td>
+                <td class="watchlist-remove">
                   <%= form_for :user_watches, url: stocks_remove_path do |f| %>
                     <%= f.hidden_field :symbol, :value => stock.symbol %>
-                  <%= f.submit "Remove", :class => "btn btn-danger btn-sm", data: {confirm: "You sure?"} %>
+                  <%= f.submit "Remove", :class => "btn btn-danger btn-xs", data: {confirm: "You sure?"} %>
                   <% end %>
                 </td>
               </tr>
