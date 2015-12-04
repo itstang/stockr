@@ -1,4 +1,4 @@
-require 'twitter.rb'
+require_relative 'twitter.rb'
 require "#{Rails.root}/config/initializers/alchemyapi.rb"
 require 'nokogiri'
 require 'open-uri'
