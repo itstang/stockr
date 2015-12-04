@@ -68,8 +68,10 @@
 
 <%= javascript_tag do %>
   var randomScalingFactor = function(){ return Math.round(Math.random()*100)};
+  var currBalance = <%= raw current_user.balance.to_json %>;
+  var today = moment().format('MM/DD');
   var lineChartData = {
-    labels : ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+    labels : [moment().subtract(6, 'days').format('MM/DD'), moment().subtract(5, 'days').format('MM/DD'), moment().subtract(4, 'days').format('MM/DD'), moment().subtract(3, 'days').format('MM/DD'), moment().subtract(2, 'days').format('MM/DD'), moment().subtract(1, 'days').format('MM/DD'), today],
     datasets : [
       {
         label: "My First dataset",
@@ -79,7 +81,7 @@
         pointStrokeColor : "#fff",
         pointHighlightFill : "#fff",
         pointHighlightStroke : "rgba(220,220,220,1)",
-        data : [10000, 5560, 8700, 11430, 14280, 13220, 7890]
+        data : [15430, 9560, 8700, 11430, 14280, 13220, currBalance]
       }
     ]
   }
