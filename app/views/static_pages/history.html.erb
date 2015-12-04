@@ -1,7 +1,7 @@
-<% provide(:title, "History") %>
-<h1>History</h1>
+<% provide(:title, "Past Transactions") %>
+<h1>Past Transactions</h1>
 
-<div class="container">        
+<div class="container">
   <table class="table table-hover">
     <thead>
       <tr>
@@ -15,14 +15,11 @@
    	  <% @transactions.each do |t| %>
         <tr>
           <td><%= t.transaction_type.upcase %></td>
-          <td><%= t.symbol %></td>
+          <td><%= link_to t.symbol.upcase, stock_path(t.id) %></td>
           <td><%= t.shares %></td>
-          <td><%= number_to_currency(t.amount) %></td>
+          <td class="<%= t.transaction_type.upcase == 'BUY' ? 'buy' : 'sell' %>"><%= number_to_currency(t.amount) %></td>
         </tr>
       <% end %>
     </tbody>
   </table>
 </div>
-
-
-

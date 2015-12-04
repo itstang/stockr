@@ -25,11 +25,13 @@ class StaticPagesController < ApplicationController
     @stock_symbols = []
     @stock_shares = []
     @stock_prices = []
+    @stock_ids = []
 
     @user_owns.each_with_index do |stock, index|
       @stock_symbols.push(stock.symbol)
       @stock_shares.push(stock.shares)
       @stock_prices.push(@data_owns[index].bid)
+      @stock_ids.push(stock.id)
     end
 
 
@@ -39,7 +41,7 @@ class StaticPagesController < ApplicationController
   end
 
   def stocks
-    @stocks = Stock.all
+    @stocks = Stock.all.page(params[:page])
   end
 
   def stocks_show
@@ -49,18 +51,17 @@ class StaticPagesController < ApplicationController
     yahoo_client = YahooFinance::Client.new
 
     @stock_data = yahoo_client.quotes([@stock.symbol, "NATU3.SA", "USDJPY=X"], [:ask, :bid, :high, :low, :moving_average_50_day, :moving_average_200_day])
-    @sentiment= sentiment(@stock.symbol)
+    #@sentiment= sentiment(@stock.symbol)
     @historical_data = yahoo_client.historical_quotes(@stock.symbol, { start_date: Time::now-(24*60*60*360), end_date: Time::now })
     twenty_day_exp_MA= moving_avg(20)
     fifty_day_exp_MA= moving_avg(50)
     @signal = "Hold"
 
-    if(twenty_day_exp_MA < fifty_day_exp_MA && @sentiment < 0)
-      @signal = "Sell"
-    end
-    else if(twenty_day_exp_MA > fifty_day_exp_MA && @sentiment > 0.25)
-      @signal = "Buy"
-    end
+    # if(twenty_day_exp_MA < fifty_day_exp_MA && @sentiment < 0)
+    #   @signal = "Sell"
+    # elsif(twenty_day_exp_MA > fifty_day_exp_MA && @sentiment > 0.25)
+    #   @signal = "Buy"
+    # end
 
     @open_history = Array.new
     @close_history = Array.new
@@ -98,28 +99,40 @@ class StaticPagesController < ApplicationController
   end
 
   def stocks_add
-    User_Watches.create(email: current_user.email, symbol: params[:symbol])
+    if !Stock.find_by(symbol: params[:symbol]).nil?
+      User_Watches.create(email: current_user.email, symbol: params[:symbol])
+    end
+    redirect_to dashboard_url
+  end
+
+  def stocks_remove
+    User_Watches.find_by(email: current_user.email, symbol: params[:user_watches][:symbol]).destroy
+    flash[:success] = "Stock removed from watchlist"
     redirect_to dashboard_url
   end
 
   def stocks_buy
     num_shares = params[:user_owns][:shares].to_i
     total_price = params[:user_owns][:price].to_f * num_shares
-    Transaction.create(transaction_type: "buy", amount: total_price)
-
-    user_owns_symbol = User_Owns.where(email: current_user.email, symbol:params[:user_owns][:symbol])
-    if user_owns_symbol.empty?
-      User_Owns.create(email: current_user.email, symbol: params[:user_owns][:symbol], shares: num_shares)
-    else
-      user_owns = User_Owns.where(:email => current_user.email, :symbol => params[:user_owns][:symbol])
-      user_owns[0].shares += num_shares
-      user_owns[0].save
-    end
 
     user = User.find_by(email: current_user.email)
-    user.balance -= total_price
-    user.save
+    user_owns_symbol = User_Owns.where(email: current_user.email, symbol:params[:user_owns][:symbol])
+    if total_price > user.balance
+      #do nothing
+    else
+      if user_owns_symbol.empty?
+        User_Owns.create(email: current_user.email, symbol: params[:user_owns][:symbol], shares: num_shares)
+      else
+        user_owns = User_Owns.where(:email => current_user.email, :symbol => params[:user_owns][:symbol])
+        user_owns[0].shares += num_shares
+        user_owns[0].save
+      end
 
+      Transaction.create(transaction_type: "buy", email: current_user.email, symbol: params[:user_owns][:symbol], shares: num_shares, amount: total_price)
+      user.balance -= total_price
+      user.save
+    end
+    flash[:success] = "You bought " + num_shares.to_s + " shares of " + params[:user_owns][:symbol].to_s + " for $" + total_price.to_s + "!"
     redirect_to dashboard_url
   end
 
@@ -142,15 +155,14 @@ class StaticPagesController < ApplicationController
       end
 
       total_price = params[:user_owns][:price].to_f * num_shares
-      Transaction.create(transaction_type: "sell", amount: total_price)
+      Transaction.create(transaction_type: "sell", email: current_user.email, symbol: params[:user_owns][:symbol], shares: num_shares, amount: total_price)
 
       user = User.find_by(email: current_user.email)
       user.balance += total_price
       user.save
     end
 
-
-
+    flash[:success] = "You sold " + num_shares.to_s + " share(s) of " + params[:user_owns][:symbol].to_s + " for $" + total_price.to_s + "!"
     redirect_to dashboard_url
   end
 
@@ -225,7 +237,7 @@ class StaticPagesController < ApplicationController
   end
 
   def history
-    @user ||= User.find(session[:email]) if session[:email]
+    @transactions = Transaction.where(email: current_user.email).order(id: :desc)
   end
 
   def contact
