@@ -56,11 +56,14 @@ ActiveRecord::Schema.define(version: 20151128214509) do
   end
 
   create_table "transactions", force: :cascade do |t|
-    t.string  "transaction_type"
-    t.string  "email"
-    t.string  "symbol"
-    t.integer "shares"
-    t.integer "amount"
+    t.string   "transaction_type"
+    t.string   "email"
+    t.string   "symbol"
+    t.integer  "shares"
+    t.integer  "amount"
+    t.integer  "stock_id"
+    t.datetime "created_at",       null: false
+    t.datetime "updated_at",       null: false
   end
 
   create_table "user_makes", force: :cascade do |t|

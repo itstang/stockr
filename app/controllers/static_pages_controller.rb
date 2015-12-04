@@ -31,7 +31,7 @@ class StaticPagesController < ApplicationController
       @stock_symbols.push(stock.symbol)
       @stock_shares.push(stock.shares)
       @stock_prices.push(@data_owns[index].bid)
-      @stock_ids.push(stock.id)
+      @stock_ids.push(stock.stock_id)
     end
 
 
@@ -129,7 +129,7 @@ class StaticPagesController < ApplicationController
         user_owns[0].save
       end
 
-      Transaction.create(transaction_type: "buy", email: current_user.email, symbol: params[:user_owns][:symbol], shares: num_shares, amount: total_price)
+      Transaction.create(transaction_type: "buy", email: current_user.email, symbol: params[:user_owns][:symbol], shares: num_shares, amount: total_price, stock_id: stock_id)
       user.balance -= total_price
       user.save
     end
@@ -139,6 +139,7 @@ class StaticPagesController < ApplicationController
 
   def stocks_sell
     num_shares = params[:user_owns][:shares].to_i
+    stock_id = Stock.find_by(symbol: params[:user_owns][:symbol]).id
 
     user_owns_symbol = User_Owns.find_by(email: current_user.email, symbol: params[:user_owns][:symbol])
     if user_owns_symbol.nil?
@@ -156,7 +157,7 @@ class StaticPagesController < ApplicationController
       end
 
       total_price = params[:user_owns][:price].to_f * num_shares
-      Transaction.create(transaction_type: "sell", email: current_user.email, symbol: params[:user_owns][:symbol], shares: num_shares, amount: total_price)
+      Transaction.create(transaction_type: "sell", email: current_user.email, symbol: params[:user_owns][:symbol], shares: num_shares, amount: total_price, stock_id: stock_id)
 
       user = User.find_by(email: current_user.email)
       user.balance += total_price

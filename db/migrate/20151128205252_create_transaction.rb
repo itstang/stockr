@@ -6,7 +6,8 @@ class CreateTransaction < ActiveRecord::Migration
       t.string  :symbol
       t.integer :shares
       t.integer :amount
-
+      t.integer :stock_id
+      
       t.timestamps null: false
     end
   end
